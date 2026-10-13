@@ -4,8 +4,7 @@
 **Project Category:** Semester Academic Web Application Submission  
 **Student Name:** Laxmi Pocharam  
 **Repository:** [https://github.com/akshayapocharam9-creator/employee-management-system](https://github.com/akshayapocharam9-creator/employee-management-system)  
-**Live Public Web Application:** [https://employee-management-system-pink-tau.vercel.app](https://employee-management-system-pink-tau.vercel.app) *(or GitHub Pages / Vercel deployment)*  
-**Presentation Slides (.PPTX):** Accessible directly within the web application via the **Presentation** tab and downloadable as [`Employee_Management_System.pptx`](./Employee_Management_System.pptx).
+**Presentation Slides (.PPTX):** Preserved in repo root as [`Employee_Management_System.pptx`](./Employee_Management_System.pptx) and accessible interactively via the **Presentation** tab in the web application.
 
 ---
 
@@ -91,8 +90,8 @@ Organizations and academic departments frequently manage employee lifecycle reco
 | :--- | :--- | :--- |
 | **Frontend** | Semantic HTML5, Modern CSS3, Vanilla JavaScript (ES6+) | Zero external UI dependencies, fast loading, dark-mode native styling, accessible `<dialog>` modals |
 | **Backend** | Node.js (v18+ / v24), Express.js (v4.21) | Lightweight, asynchronous REST API for JSON resource management |
-| **State & Persistence**| Express JSON file database (`db.json` / `data.json`) + Client-side `localStorage` fallback | Dual-mode resilience: operates with real server-side REST API, and falls back seamlessly to browser storage on static hosting |
-| **Deployment** | Vercel Serverless Functions (`api/index.js`), GitHub Pages, and Node.js daemon | Multi-platform deployment ready |
+| **State & Persistence**| Express JSON file database (`db.json` / `data.json`) + Client-side `localStorage` fallback | Operates with real server-side REST API, and falls back to browser storage if accessed without an API server |
+| **Hosting Config** | `render.yaml` (Render PaaS), `Procfile` (Railway/PaaS), `vercel.json` (Serverless) | Production ready for persistent Node.js application hosting |
 | **Version Control**| Git, GitHub | Academic repository tracking |
 
 ---
@@ -113,18 +112,18 @@ The system implements a standard **3-Tier Web Architecture**:
                               |
 +-------------------------------------------------------------+
 |                 2. APPLICATION LAYER                        |
-|   Node.js + Express.js REST API Server / Serverless Handler |
+|   Node.js + Express.js REST API Server                      |
 |   - Authentication & Role Filtering                         |
 |   - Attendance & Punch Duration Calculator                  |
 |   - Payroll Tax & PF Computation Engine                     |
 |   - Cascade Integrity Enforcement                           |
 +-------------------------------------------------------------+
                               |
-                     File I/O / LocalStorage
+                     File I/O (Persistent)
                               |
 +-------------------------------------------------------------+
 |                     3. DATA LAYER                           |
-|   Persistent Storage (db.json / data.json / localStorage)   |
+|   Persistent Storage (db.json / data.json)                  |
 |   - employees: Personnel, Role, Salary Structure            |
 |   - attendance: Check-in, Check-out, Status, Work Hours     |
 |   - leaves: Requests, Date Range, Status, Balances          |
@@ -169,14 +168,24 @@ Runs the automated test suite verifying data integrity, schema consistency, pres
 
 ---
 
-## 8. Environment Configuration
+## 8. Deployment & Cloud Hosting Architecture
 
-Copy `.env.example` to `.env` if you wish to configure custom ports:
-```bash
-# .env
-PORT=3000
-NODE_ENV=development
-```
+### Why Platform Choice Matters
+
+1. **GitHub Pages (Incompatible for Backend):** GitHub Pages only serves static client files (HTML, CSS, JS). It cannot execute Node.js runtimes or Express API routes (`/api/state`, `/api/:col`), making real backend persistence impossible on Pages.
+2. **Serverless Hosting (e.g. Vercel with ephemeral `/tmp`):** Serverless Lambda functions are stateless; files written to `/tmp` are destroyed when Lambda instances recycle, leading to data loss between requests.
+3. **Recommended Production Hosting: Render or Railway (Persistent Node.js Web Service):**
+   - Runs a long-lived Node.js process (`node server.js`) 24/7.
+   - Handles all Express REST API endpoints seamlessly.
+   - Writes to `db.json` persist reliably across sessions and requests.
+   - Operates independently of the developer's local machine.
+
+### Deploying to Render (Recommended)
+1. Go to [render.com](https://render.com) and sign in with GitHub.
+2. Click **New +** → **Blueprint** (or **Web Service**).
+3. Connect the repository `akshayapocharam9-creator/employee-management-system`.
+4. Render automatically reads [`render.yaml`](./render.yaml), installs dependencies, and runs `npm start`.
+5. Your permanent, free public HTTPS URL will be provisioned (e.g., `https://employee-management-system-xxxx.onrender.com`).
 
 ---
 
