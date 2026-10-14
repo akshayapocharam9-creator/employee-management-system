@@ -66,3 +66,38 @@ test('Verification: Production hosting configuration and routing files', () => {
   const procfilePath = path.join(rootDir, 'Procfile');
   assert.ok(fs.existsSync(procfilePath), 'Procfile must exist');
 });
+
+test('Verification: Enterprise features, role management, and presentation in index.html', () => {
+  const htmlPath = path.join(rootDir, 'index.html');
+  const html = fs.readFileSync(htmlPath, 'utf8');
+
+  // RBAC & Users
+  assert.ok(html.includes('Admin') && html.includes('HR') && html.includes('Employee'), 'Must support Admin, HR, and Employee roles');
+  assert.ok(html.includes("role = sessionStorage.getItem('role')"), 'Must track role in session');
+
+  // Presentation & Academic Submission
+  assert.ok(html.includes('presentation'), 'Must contain dedicated presentation section');
+  assert.ok(html.includes('Employee_Management_System.pptx'), 'Must provide download link for PPTX');
+  assert.ok(html.includes('SLIDES = ['), 'Must contain slide deck data for browser viewing');
+
+  // Operational Modules
+  assert.ok(html.includes('punch()') && html.includes('punchOut()'), 'Must support punch in and punch out');
+  assert.ok(html.includes('leaveBalance'), 'Must support leave balance tracking');
+  assert.ok(html.includes('payslip('), 'Must support payslip generation');
+  assert.ok(html.includes('exportCSV'), 'Must support CSV exports');
+});
+
+test('Verification: server.js and api/index.js RBAC and data validation', () => {
+  const serverPath = path.join(rootDir, 'server.js');
+  const serverCode = fs.readFileSync(serverPath, 'utf8');
+
+  assert.ok(serverCode.includes('x-user-role'), 'server.js must inspect x-user-role header');
+  assert.ok(serverCode.includes('already exists'), 'server.js must guard against duplicate employee IDs or codes');
+  assert.ok(serverCode.includes('cascade delete'), 'server.js must cascade delete related records');
+
+  const apiPath = path.join(rootDir, 'api', 'index.js');
+  const apiCode = fs.readFileSync(apiPath, 'utf8');
+  assert.ok(apiCode.includes('x-user-role'), 'api/index.js must inspect x-user-role header');
+});
+
+

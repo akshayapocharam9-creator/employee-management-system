@@ -3,218 +3,2483 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Employee Management System</title>
-<meta name="description" content="Employee records, attendance, leave and payroll in one web app.">
+<title>Employee Management System · Enterprise HR Portal</title>
+<meta name="description" content="Enterprise-grade employee records, daily attendance punch, leave workflows, automated payroll calculation, and interactive reporting.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f1f5f9;--card:#fff;--ink:#0f172a;--mute:#64748b;--line:#e2e8f0;--pri:#2563eb;--ok:#059669;--bad:#dc2626;--warn:#d97706}
-@media(prefers-color-scheme:dark){:root{--bg:#0b1120;--card:#111a2e;--ink:#e2e8f0;--mute:#94a3b8;--line:#1e293b}}
-*{box-sizing:border-box}body{margin:0;font:14px/1.5 system-ui,sans-serif;background:var(--bg);color:var(--ink)}
-header{background:#0f172a;color:#fff;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 20px;position:sticky;top:0;z-index:5}
-header b{font-size:16px;margin-right:12px}nav{display:flex;gap:4px;flex:1;flex-wrap:wrap}
-nav button{background:none;border:0;color:#cbd5e1;padding:7px 12px;border-radius:8px;cursor:pointer;font:inherit}
-nav button.on,nav button:hover{background:#1e3a8a;color:#fff}
-main{max-width:1180px;margin:0 auto;padding:20px}h2{margin:0 0 14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
-.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
-.stat small{color:var(--mute)}.stat div{font-size:26px;font-weight:700}
-table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
-th{color:var(--mute);font-size:12px;text-transform:uppercase}.scroll{overflow-x:auto}
-button.b,a.b{background:var(--pri);color:#fff;border:0;border-radius:8px;padding:7px 14px;cursor:pointer;font:inherit}
-button.g{background:none;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:5px 10px;cursor:pointer;font:inherit}
-.ok{background:var(--ok)}.bad{background:var(--bad)}
-input,select,textarea{font:inherit;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);width:100%}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.row>*{flex:1;min-width:140px}.row>button{flex:none}
-form.fg{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}form.fg label{font-size:12px;color:var(--mute)}
-.tag{padding:2px 9px;border-radius:99px;font-size:12px;background:var(--line)}
-.Active,.Present,.Approved,.Paid{color:var(--ok)}.Rejected,.Absent,.Inactive{color:var(--bad)}.Pending,.Late,.On\ Leave{color:var(--warn)}
-.bar{height:10px;border-radius:5px;background:var(--pri);min-width:4px}.bl{display:grid;grid-template-columns:130px 1fr 90px;gap:10px;align-items:center;margin:6px 0}
-dialog{border:0;border-radius:14px;padding:22px;width:min(680px,94vw);background:var(--card);color:var(--ink)}dialog::backdrop{background:#0008}
-.login{max-width:420px;margin:12vh auto;text-align:center}.login button{display:block;width:100%;margin:10px 0;padding:14px}
-.mode{font-size:12px;color:#94a3b8}
-@media print{header,.noprint{display:none}dialog{box-shadow:none;width:100%}}
+:root{
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --card-elevated:#ffffff;
+  --ink:#0f172a;
+  --ink-secondary:#475569;
+  --mute:#64748b;
+  --line:#e2e8f0;
+  --line-strong:#cbd5e1;
+  --pri:#2563eb;
+  --pri-hover:#1d4ed8;
+  --pri-light:#eff6ff;
+  --pri-border:#bfdbfe;
+  --ok:#059669;
+  --ok-light:#ecfdf5;
+  --ok-border:#a7f3d0;
+  --bad:#dc2626;
+  --bad-light:#fef2f2;
+  --bad-border:#fecaca;
+  --warn:#d97706;
+  --warn-light:#fffbeb;
+  --warn-border:#fde68a;
+  --info:#0284c7;
+  --info-light:#f0f9ff;
+  --shadow-sm:0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow:0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+  --shadow-lg:0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+  --radius:12px;
+  --radius-lg:16px;
+  --radius-full:9999px;
+  --transition:all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#090d16;
+    --card:#111827;
+    --card-elevated:#1e293b;
+    --ink:#f8fafc;
+    --ink-secondary:#cbd5e1;
+    --mute:#94a3b8;
+    --line:#1e293b;
+    --line-strong:#334155;
+    --pri-light:#1e3a8a33;
+    --pri-border:#1e3a8a;
+    --ok-light:#064e3b33;
+    --ok-border:#065f46;
+    --bad-light:#7f1d1d33;
+    --bad-border:#991b1b;
+    --warn-light:#78350f33;
+    --warn-border:#92400e;
+    --info-light:#082f4933;
+    --shadow-sm:0 1px 2px 0 rgb(0 0 0 / 0.4);
+    --shadow:0 4px 6px -1px rgb(0 0 0 / 0.4);
+    --shadow-lg:0 10px 15px -3px rgb(0 0 0 / 0.5);
+  }
+}
+[data-theme="dark"]{
+  --bg:#090d16;
+  --card:#111827;
+  --card-elevated:#1e293b;
+  --ink:#f8fafc;
+  --ink-secondary:#cbd5e1;
+  --mute:#94a3b8;
+  --line:#1e293b;
+  --line-strong:#334155;
+  --pri-light:#1e3a8a33;
+  --pri-border:#1e3a8a;
+  --ok-light:#064e3b33;
+  --ok-border:#065f46;
+  --bad-light:#7f1d1d33;
+  --bad-border:#991b1b;
+  --warn-light:#78350f33;
+  --warn-border:#92400e;
+  --info-light:#082f4933;
+}
+[data-theme="light"]{
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --card-elevated:#ffffff;
+  --ink:#0f172a;
+  --ink-secondary:#475569;
+  --mute:#64748b;
+  --line:#e2e8f0;
+  --line-strong:#cbd5e1;
+  --pri-light:#eff6ff;
+  --pri-border:#bfdbfe;
+  --ok-light:#ecfdf5;
+  --ok-border:#a7f3d0;
+  --bad-light:#fef2f2;
+  --bad-border:#fecaca;
+  --warn-light:#fffbeb;
+  --warn-border:#fde68a;
+  --info-light:#f0f9ff;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size:14px;
+  line-height:1.55;
+  background:var(--bg);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+/* Header & Nav */
+header{
+  background:var(--card);
+  border-bottom:1px solid var(--line);
+  position:sticky;
+  top:0;
+  z-index:40;
+  box-shadow:var(--shadow-sm);
+}
+.header-inner{
+  max-width:1280px;
+  margin:0 auto;
+  padding:10px 20px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:12px;
+  justify-content:space-between;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  color:inherit;
+  cursor:pointer;
+}
+.brand-icon{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  background:linear-gradient(135deg, #2563eb, #1d4ed8);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  font-size:17px;
+  box-shadow:0 2px 4px rgba(37,99,235,0.3);
+}
+.brand-text b{
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:-0.2px;
+  display:block;
+  line-height:1.2;
+}
+.brand-text span{
+  font-size:11px;
+  color:var(--mute);
+  font-weight:500;
+}
+nav{
+  display:flex;
+  gap:4px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+nav button{
+  background:none;
+  border:0;
+  color:var(--ink-secondary);
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font:inherit;
+  font-weight:600;
+  font-size:13.5px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  transition:var(--transition);
+}
+nav button:hover{
+  background:var(--bg);
+  color:var(--ink);
+}
+nav button.on{
+  background:var(--pri-light);
+  color:var(--pri);
+}
+.user-menu{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.user-badge{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:4px 8px 4px 4px;
+  border-radius:var(--radius-full);
+  background:var(--bg);
+  border:1px solid var(--line);
+}
+.user-avatar{
+  width:28px;
+  height:28px;
+  border-radius:var(--radius-full);
+  background:var(--pri);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:11px;
+}
+.user-name{
+  font-size:12.5px;
+  font-weight:600;
+  color:var(--ink);
+  line-height:1.2;
+}
+.role-badge{
+  font-size:10px;
+  font-weight:700;
+  text-transform:uppercase;
+  padding:2px 7px;
+  border-radius:var(--radius-full);
+  letter-spacing:0.5px;
+}
+.role-Admin{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+.role-HR{background:#e0e7ff;color:#3730a3;border:1px solid #c7d2fe}
+.role-Employee{background:#dcfce7;color:#166534;border:1px solid #bbf7d0}
+.role-Guest{background:#f1f5f9;color:#475569;border:1px solid #cbd5e1}
+
+/* Layout */
+main{
+  max-width:1280px;
+  margin:0 auto;
+  padding:24px 20px 48px;
+}
+.page-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  flex-wrap:wrap;
+  gap:16px;
+  margin-bottom:20px;
+}
+.page-title h1{
+  margin:0;
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:-0.5px;
+  color:var(--ink);
+}
+.page-title p{
+  margin:4px 0 0;
+  color:var(--mute);
+  font-size:13.5px;
+}
+.page-actions{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+/* Cards & Grid */
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:var(--shadow-sm);
+  transition:var(--transition);
+}
+.card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+  gap:12px;
+}
+.card-title{
+  font-size:16px;
+  font-weight:700;
+  color:var(--ink);
+  margin:0;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.grid{
+  display:grid;
+  gap:16px;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+}
+.stat-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:18px 20px;
+  box-shadow:var(--shadow-sm);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  position:relative;
+  overflow:hidden;
+}
+.stat-card::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  width:4px;
+  height:100%;
+  background:var(--pri);
+}
+.stat-card.ok::before{background:var(--ok)}
+.stat-card.warn::before{background:var(--warn)}
+.stat-card.info::before{background:var(--info)}
+.stat-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+}
+.stat-title{
+  color:var(--mute);
+  font-size:12px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+.stat-icon{
+  width:32px;
+  height:32px;
+  border-radius:8px;
+  background:var(--bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--mute);
+}
+.stat-value{
+  font-size:28px;
+  font-weight:800;
+  letter-spacing:-0.5px;
+  color:var(--ink);
+  line-height:1.2;
+}
+.stat-sub{
+  font-size:12px;
+  color:var(--mute);
+  margin-top:6px;
+}
+
+/* Buttons & Links */
+button.b,a.b{
+  background:var(--pri);
+  color:#fff;
+  border:0;
+  border-radius:var(--radius);
+  padding:8px 16px;
+  cursor:pointer;
+  font:inherit;
+  font-size:13.5px;
+  font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  text-decoration:none;
+  box-shadow:var(--shadow-sm);
+  transition:var(--transition);
+}
+button.b:hover,a.b:hover{
+  background:var(--pri-hover);
+  box-shadow:var(--shadow);
+  transform:translateY(-1px);
+}
+button.b:active,a.b:active{
+  transform:translateY(0);
+}
+button.g,a.g{
+  background:var(--card);
+  border:1px solid var(--line);
+  color:var(--ink);
+  border-radius:var(--radius);
+  padding:7px 14px;
+  cursor:pointer;
+  font:inherit;
+  font-size:13px;
+  font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  text-decoration:none;
+  transition:var(--transition);
+}
+button.g:hover,a.g:hover{
+  background:var(--bg);
+  border-color:var(--line-strong);
+}
+button.danger{
+  background:var(--bad-light);
+  border:1px solid var(--bad-border);
+  color:var(--bad);
+}
+button.danger:hover{
+  background:var(--bad);
+  color:#fff;
+}
+button.success{
+  background:var(--ok-light);
+  border:1px solid var(--ok-border);
+  color:var(--ok);
+}
+button.success:hover{
+  background:var(--ok);
+  color:#fff;
+}
+button.sm,a.sm{padding:5px 10px;font-size:12px;border-radius:6px}
+button.icon-btn{padding:7px;border-radius:8px}
+
+/* Forms & Inputs */
+input,select,textarea{
+  font:inherit;
+  font-size:13.5px;
+  padding:9px 12px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--card);
+  color:var(--ink);
+  width:100%;
+  transition:var(--transition);
+}
+input:focus,select:focus,textarea:focus{
+  outline:0;
+  border-color:var(--pri);
+  box-shadow:0 0 0 3px var(--pri-light);
+}
+.row{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-bottom:16px;
+}
+.row>*{flex:1;min-width:160px}
+.row>button,.row>a{flex:none}
+form.fg{
+  display:grid;
+  gap:14px;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+}
+form.fg label{
+  display:block;
+  font-size:12px;
+  font-weight:600;
+  color:var(--mute);
+  margin-bottom:5px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+.input-group{
+  display:flex;
+  flex-direction:column;
+}
+
+/* Tables */
+.table-wrapper{
+  overflow-x:auto;
+  border-radius:var(--radius-lg);
+  border:1px solid var(--line);
+  background:var(--card);
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13.5px;
+}
+th{
+  background:var(--bg);
+  color:var(--mute);
+  font-size:11.5px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  text-align:left;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  white-space:nowrap;
+}
+td{
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  white-space:nowrap;
+  color:var(--ink);
+}
+tr:last-child td{border-bottom:0}
+tbody tr{
+  transition:var(--transition);
+}
+tbody tr:hover{
+  background:var(--bg);
+}
+
+/* Status Tags & Badges */
+.tag{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:3px 10px;
+  border-radius:var(--radius-full);
+  font-size:11.5px;
+  font-weight:700;
+  line-height:1.2;
+}
+.tag::before{
+  content:'';
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:currentColor;
+}
+.tag.Active,.tag.Present,.tag.Approved,.tag.Paid{
+  background:var(--ok-light);
+  color:var(--ok);
+  border:1px solid var(--ok-border);
+}
+.tag.Rejected,.tag.Absent,.tag.Inactive{
+  background:var(--bad-light);
+  color:var(--bad);
+  border:1px solid var(--bad-border);
+}
+.tag.Pending,.tag.Late,.tag.On\ Leave,.tag.Half-Day{
+  background:var(--warn-light);
+  color:var(--warn);
+  border:1px solid var(--warn-border);
+}
+.tag.Casual{background:#e0e7ff;color:#3730a3;border:1px solid #c7d2fe}
+.tag.Sick{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+.tag.PaidLeave{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
+.tag.Unpaid{background:#f1f5f9;color:#475569;border:1px solid #cbd5e1}
+
+/* Charts & Bars */
+.bl{
+  display:grid;
+  grid-template-columns:140px 1fr 100px;
+  gap:12px;
+  align-items:center;
+  margin:10px 0;
+}
+.bl span{
+  font-size:13px;
+  font-weight:600;
+  color:var(--ink-secondary);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.bar-track{
+  height:10px;
+  border-radius:var(--radius-full);
+  background:var(--bg);
+  overflow:hidden;
+  position:relative;
+}
+.bar{
+  height:100%;
+  border-radius:var(--radius-full);
+  background:linear-gradient(90deg, var(--pri), #3b82f6);
+  min-width:6px;
+  transition:width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bl b{
+  font-size:13px;
+  font-weight:700;
+  text-align:right;
+}
+
+/* Modals & Dialogs */
+dialog{
+  border:0;
+  border-radius:var(--radius-lg);
+  padding:0;
+  width:min(680px, 94vw);
+  background:var(--card);
+  color:var(--ink);
+  box-shadow:var(--shadow-lg);
+}
+dialog::backdrop{
+  background:rgba(15, 23, 42, 0.65);
+  backdrop-filter:blur(4px);
+}
+.modal-header{
+  padding:20px 24px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.modal-header h2{
+  margin:0;
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:-0.3px;
+}
+.modal-body{
+  padding:24px;
+  max-height:75vh;
+  overflow-y:auto;
+}
+.modal-footer{
+  padding:16px 24px;
+  border-top:1px solid var(--line);
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  background:var(--bg);
+}
+
+/* Toast System */
+#toast-container{
+  position:fixed;
+  top:20px;
+  right:20px;
+  z-index:9999;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  pointer-events:none;
+}
+.toast{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:12px 18px;
+  box-shadow:var(--shadow-lg);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:13.5px;
+  font-weight:600;
+  min-width:280px;
+  max-width:400px;
+  pointer-events:auto;
+  animation:toastIn 0.25s ease-out;
+  transition:all 0.2s ease;
+}
+.toast.success{border-left:4px solid var(--ok);color:var(--ink)}
+.toast.error{border-left:4px solid var(--bad);color:var(--ink)}
+.toast.info{border-left:4px solid var(--info);color:var(--ink)}
+@keyframes toastIn{
+  from{transform:translateX(100%);opacity:0}
+  to{transform:translateX(0);opacity:1}
+}
+
+/* Login View */
+.login-container{
+  max-width:480px;
+  margin:8vh auto;
+  text-align:center;
+}
+.login-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:36px 32px;
+  box-shadow:var(--shadow);
+}
+.login-logo{
+  width:56px;
+  height:56px;
+  border-radius:14px;
+  background:linear-gradient(135deg, #2563eb, #1d4ed8);
+  color:#fff;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  font-size:24px;
+  margin-bottom:16px;
+  box-shadow:0 8px 16px rgba(37,99,235,0.25);
+}
+.role-select-btn{
+  width:100%;
+  margin:10px 0;
+  padding:14px 18px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--card);
+  color:var(--ink);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  text-align:left;
+  transition:var(--transition);
+}
+.role-select-btn:hover{
+  border-color:var(--pri);
+  background:var(--pri-light);
+  transform:translateY(-1px);
+}
+.role-select-btn b{display:block;font-size:14px}
+.role-select-btn small{color:var(--mute);font-size:12px}
+
+/* Slide Viewer */
+.slide-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:32px;
+  box-shadow:var(--shadow-sm);
+  min-height:420px;
+  position:relative;
+}
+.slide-badge{
+  display:inline-block;
+  padding:4px 12px;
+  border-radius:var(--radius-full);
+  background:var(--pri-light);
+  color:var(--pri);
+  border:1px solid var(--pri-border);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+.slide-title{
+  font-size:24px;
+  font-weight:800;
+  color:var(--ink);
+  margin:0 0 6px;
+}
+.slide-subtitle{
+  font-size:14px;
+  color:var(--mute);
+  margin-bottom:24px;
+}
+
+/* Pagination */
+.pagination{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 16px;
+  border-top:1px solid var(--line);
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+@media print{
+  header,#toast-container,.noprint{display:none !important}
+  main{padding:0}
+  dialog{position:static;width:100%;box-shadow:none;border:0}
+  .modal-body{max-height:none;overflow:visible}
+  body{background:#fff;color:#000}
+}
 </style>
 </head>
 <body>
+<div id="toast-container"></div>
 <div id="app"></div>
 <dialog id="dlg"></dialog>
+
 <script>
+/* ---------- State & Seed Data ---------- */
 const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const inr = (n) => '₹' + Number(n || 0).toLocaleString('en-IN');
 const today = () => new Date().toISOString().slice(0, 10);
 const now = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-const COLS = ['employees', 'attendance', 'leaves', 'payroll'];
-let S = {}, live = false, role = sessionStorage.getItem('role'), tab = 'dashboard', q = '';
 
-/* ---------- data layer: REST API when server.js is running, localStorage otherwise ---------- */
+const SEED = {
+  employees: [
+    { id: "emp-001", employeeCode: "EMS-101", firstName: "Aarav", lastName: "Sharma", email: "aarav.sharma@techcorp.io", phone: "+91 98765 43210", address: "Flat 402, Green Meadows Residency, Outer Ring Road, Bellandur, Bengaluru, Karnataka 560103", department: "Engineering", designation: "Senior Lead Engineer", role: "Admin", joiningDate: "2022-03-15", status: "Active", salary: { basic: 75000, hra: 30000, allowances: 15000, taxRate: 12, pfRate: 12 }, bankDetails: { accountNumber: "•••• •••• 9012", bankName: "HDFC Bank", ifsc: "HDFC0001234" }, avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80", leaveBalance: { casual: 6, sick: 8, paid: 14 } },
+    { id: "emp-002", employeeCode: "EMS-102", firstName: "Priya", lastName: "Patel", email: "priya.patel@techcorp.io", phone: "+91 98123 45678", address: "Plot 18, Gulmohar Avenue, Sector 14, Koparkhairane, Navi Mumbai, Maharashtra 400709", department: "Human Resources", designation: "Senior HR Specialist", role: "HR", joiningDate: "2023-01-10", status: "Active", salary: { basic: 52000, hra: 20800, allowances: 10000, taxRate: 10, pfRate: 12 }, bankDetails: { accountNumber: "•••• •••• 4421", bankName: "ICICI Bank", ifsc: "ICIC0005432" }, avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80", leaveBalance: { casual: 8, sick: 10, paid: 16 } },
+    { id: "emp-003", employeeCode: "EMS-103", firstName: "Rohan", lastName: "Verma", email: "rohan.verma@techcorp.io", phone: "+91 97711 22334", address: "401, Tech Park View, Whitefield, Bengaluru, Karnataka 560066", department: "Data Science", designation: "Data Scientist", role: "Employee", joiningDate: "2023-07-01", status: "Active", salary: { basic: 60000, hra: 24000, allowances: 12000, taxRate: 10, pfRate: 12 }, bankDetails: { accountNumber: "•••• •••• 7731", bankName: "State Bank of India", ifsc: "SBIN0008899" }, avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80", leaveBalance: { casual: 5, sick: 7, paid: 12 } },
+    { id: "emp-004", employeeCode: "EMS-104", firstName: "Ananya", lastName: "Iyer", email: "ananya.iyer@techcorp.io", phone: "+91 99223 34455", address: "12, Rainbow Layout, Indiranagar, Bengaluru, Karnataka 560038", department: "UI/UX Design", designation: "Product Designer", role: "Employee", joiningDate: "2023-11-15", status: "Active", salary: { basic: 48000, hra: 19200, allowances: 8000, taxRate: 8, pfRate: 12 }, bankDetails: { accountNumber: "•••• •••• 6509", bankName: "Axis Bank", ifsc: "UTIB0002100" }, avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80", leaveBalance: { casual: 7, sick: 9, paid: 15 } },
+    { id: "emp-005", employeeCode: "EMS-105", firstName: "Vikram", lastName: "Kulkarni", email: "vikram.k@techcorp.io", phone: "+91 91555 66778", address: "Flat 101, Orchid Tower, Kothrud, Pune, Maharashtra 411038", department: "Operations", designation: "Operations Coordinator", role: "Employee", joiningDate: "2024-02-01", status: "On Leave", salary: { basic: 42000, hra: 16800, allowances: 7000, taxRate: 8, pfRate: 12 }, bankDetails: { accountNumber: "•••• •••• 1184", bankName: "HDFC Bank", ifsc: "HDFC0001234" }, avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80", leaveBalance: { casual: 2, sick: 4, paid: 8 } },
+    { id: "emp-006", employeeCode: "EMS-106", firstName: "Sneha", lastName: "Reddy", email: "sneha.reddy@techcorp.io", phone: "+91 93456 78901", address: "302, Cyber Heights, Gachibowli, Hyderabad, Telangana 500032", department: "Data Science", designation: "Junior ML Engineer", role: "Employee", joiningDate: "2024-04-12", status: "Active", salary: { basic: 45000, hra: 18000, allowances: 7500, taxRate: 8, pfRate: 12 }, bankDetails: { accountNumber: "•••• •••• 3345", bankName: "Kotak Mahindra Bank", ifsc: "KKBK0000123" }, avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80", leaveBalance: { casual: 9, sick: 10, paid: 18 } }
+  ],
+  attendance: [
+    { id: "att-01", employeeId: "emp-001", employeeName: "Aarav Sharma", department: "Engineering", date: "2026-10-06", checkIn: "09:02 AM", checkOut: "06:15 PM", status: "Present", workHours: 9.2, notes: "On time, lead daily standup" },
+    { id: "att-02", employeeId: "emp-002", employeeName: "Priya Patel", department: "Human Resources", date: "2026-10-06", checkIn: "08:55 AM", checkOut: "05:45 PM", status: "Present", workHours: 8.8, notes: "Campus recruitment review" },
+    { id: "att-03", employeeId: "emp-003", employeeName: "Rohan Verma", department: "Data Science", date: "2026-10-06", checkIn: "09:42 AM", checkOut: "06:30 PM", status: "Late", workHours: 8.8, notes: "Delayed due to traffic, reported on Slack" },
+    { id: "att-04", employeeId: "emp-004", employeeName: "Ananya Iyer", department: "UI/UX Design", date: "2026-10-06", checkIn: "09:10 AM", checkOut: "06:05 PM", status: "Present", workHours: 8.9, notes: "Figma design system sprint" },
+    { id: "att-05", employeeId: "emp-005", employeeName: "Vikram Kulkarni", department: "Operations", date: "2026-10-06", checkIn: "-", checkOut: "-", status: "On Leave", workHours: 0, notes: "Approved medical leave" },
+    { id: "att-06", employeeId: "emp-006", employeeName: "Sneha Reddy", department: "Data Science", date: "2026-10-06", checkIn: "09:05 AM", checkOut: "05:05 PM", status: "Present", workHours: 8.0, notes: "Model evaluation benchmarks" }
+  ],
+  leaves: [
+    { id: "leave-001", employeeId: "emp-005", employeeName: "Vikram Kulkarni", department: "Operations", leaveType: "Sick", startDate: "2026-10-06", endDate: "2026-10-07", days: 2, reason: "Viral fever and medical consultation.", status: "Approved", appliedOn: "2026-10-05", reviewedBy: "Priya Patel (HR)", reviewedAt: "2026-10-05 04:30 PM" },
+    { id: "leave-002", employeeId: "emp-003", employeeName: "Rohan Verma", department: "Data Science", leaveType: "Casual", startDate: "2026-10-12", endDate: "2026-10-13", days: 2, reason: "Attending family wedding ceremony.", status: "Pending", appliedOn: "2026-10-06" },
+    { id: "leave-003", employeeId: "emp-004", employeeName: "Ananya Iyer", department: "UI/UX Design", leaveType: "Paid", startDate: "2026-10-20", endDate: "2026-10-23", days: 4, reason: "Annual personal vacation trip.", status: "Pending", appliedOn: "2026-10-06" },
+    { id: "leave-004", employeeId: "emp-006", employeeName: "Sneha Reddy", department: "Data Science", leaveType: "Casual", startDate: "2026-09-28", endDate: "2026-09-29", days: 2, reason: "Relocation assistance.", status: "Approved", appliedOn: "2026-09-25", reviewedBy: "Priya Patel (HR)", reviewedAt: "2026-09-25 02:15 PM" }
+  ],
+  payroll: [
+    { id: "pay-001", employeeId: "emp-001", employeeName: "Aarav Sharma", department: "Engineering", designation: "Senior Lead Engineer", month: "September 2026", payDate: "2026-09-30", basicSalary: 75000, hra: 30000, specialAllowance: 15000, grossSalary: 120000, taxDeduction: 14400, pfDeduction: 9000, attendancePenalty: 0, totalDeductions: 23400, netSalary: 96600, status: "Paid", workingDays: 22, presentDays: 22, paidLeaveDays: 0 },
+    { id: "pay-002", employeeId: "emp-002", employeeName: "Priya Patel", department: "Human Resources", designation: "Senior HR Specialist", month: "September 2026", payDate: "2026-09-30", basicSalary: 52000, hra: 20800, specialAllowance: 10000, grossSalary: 82800, taxDeduction: 8280, pfDeduction: 6240, attendancePenalty: 0, totalDeductions: 14520, netSalary: 68280, status: "Paid", workingDays: 22, presentDays: 21, paidLeaveDays: 1 },
+    { id: "pay-003", employeeId: "emp-003", employeeName: "Rohan Verma", department: "Data Science", designation: "Data Scientist", month: "September 2026", payDate: "2026-09-30", basicSalary: 60000, hra: 24000, specialAllowance: 12000, grossSalary: 96000, taxDeduction: 9600, pfDeduction: 7200, attendancePenalty: 0, totalDeductions: 16800, netSalary: 79200, status: "Paid", workingDays: 22, presentDays: 22, paidLeaveDays: 0 },
+    { id: "pay-004", employeeId: "emp-004", employeeName: "Ananya Iyer", department: "UI/UX Design", designation: "Product Designer", month: "September 2026", payDate: "2026-09-30", basicSalary: 48000, hra: 19200, specialAllowance: 8000, grossSalary: 75200, taxDeduction: 6016, pfDeduction: 5760, attendancePenalty: 0, totalDeductions: 11776, netSalary: 63424, status: "Paid", workingDays: 22, presentDays: 22, paidLeaveDays: 0 },
+    { id: "pay-005", employeeId: "emp-005", employeeName: "Vikram Kulkarni", department: "Operations", designation: "Operations Coordinator", month: "September 2026", payDate: "2026-09-30", basicSalary: 42000, hra: 16800, specialAllowance: 7000, grossSalary: 65800, taxDeduction: 5264, pfDeduction: 5040, attendancePenalty: 2100, totalDeductions: 12404, netSalary: 53396, status: "Paid", workingDays: 22, presentDays: 20, paidLeaveDays: 1 },
+    { id: "pay-006", employeeId: "emp-006", employeeName: "Sneha Reddy", department: "Data Science", designation: "Junior ML Engineer", month: "September 2026", payDate: "2026-09-30", basicSalary: 45000, hra: 18000, specialAllowance: 7500, grossSalary: 70500, taxDeduction: 5640, pfDeduction: 5400, attendancePenalty: 0, totalDeductions: 11040, netSalary: 59460, status: "Paid", workingDays: 22, presentDays: 22, paidLeaveDays: 0 }
+  ]
+};
+
+const COLS = ['employees', 'attendance', 'leaves', 'payroll'];
+let S = {}, live = false, role = sessionStorage.getItem('role'), tab = 'dashboard';
+let q = '', empDept = '', empStatus = '', empRole = '', empSort = 'name-asc', empPage = 1, empPerPage = 5;
+let attDate = '', attStatus = '', leaveFilter = 'All', payrollMonth = '', slideIdx = 1, slideMode = 'single';
+
+/* ---------- Toast Notification Engine ---------- */
+function toast(msg, type = 'success') {
+  const c = $('#toast-container');
+  if (!c) return;
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+  t.innerHTML = `<span style="font-weight:800;color:${type==='success'?'var(--ok)':type==='error'?'var(--bad)':'var(--info)'}">${icon}</span><span>${esc(msg)}</span>`;
+  c.appendChild(t);
+  setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateY(-10px)';
+    setTimeout(() => t.remove(), 200);
+  }, 3200);
+}
+
+/* ---------- Data Layer: REST API + LocalStorage Fallback ---------- */
 async function boot() {
   try {
     const r = await fetch('/api/state');
     if (!r.ok) throw 0;
-    S = await r.json(); live = true;
+    S = await r.json();
+    live = true;
   } catch {
     const l = localStorage.getItem('ems');
-    S = l ? JSON.parse(l) : await (await fetch('data.json')).json();
+    if (l) {
+      try { S = JSON.parse(l); } catch { S = JSON.parse(JSON.stringify(SEED)); }
+    } else {
+      try {
+        const f = await fetch('data.json');
+        S = f.ok ? await f.json() : JSON.parse(JSON.stringify(SEED));
+      } catch {
+        S = JSON.parse(JSON.stringify(SEED));
+      }
+    }
   }
   render();
 }
-async function commit(col, op, item) { // op: add | upd | del | all
-  const L = S[col];
+
+async function commit(col, op, item) {
+  const L = S[col] || [];
   if (op === 'add') L.unshift(item);
-  if (op === 'upd') L[L.findIndex((x) => x.id === item.id)] = item;
+  if (op === 'upd') {
+    const idx = L.findIndex((x) => x.id === item.id);
+    if (idx >= 0) L[idx] = item;
+  }
   if (op === 'del') {
     S[col] = L.filter((x) => x.id !== item);
-    if (col === 'employees') for (const c of ['attendance', 'leaves', 'payroll']) S[c] = S[c].filter((x) => x.employeeId !== item);
+    if (col === 'employees') {
+      for (const c of ['attendance', 'leaves', 'payroll']) {
+        if (S[c]) S[c] = S[c].filter((x) => x.employeeId !== item);
+      }
+    }
   }
   if (op === 'all') S[col] = item;
+
   if (live) {
-    const u = '/api/' + col, j = { 'Content-Type': 'application/json' };
+    const u = '/api/' + col;
+    const headers = { 'Content-Type': 'application/json', 'X-User-Role': role || 'Guest' };
     const m = { add: [u, 'POST'], upd: [`${u}/${item?.id}`, 'PUT'], del: [`${u}/${item}`, 'DELETE'], all: [u, 'PUT'] }[op];
-    await fetch(m[0], { method: m[1], headers: j, body: op === 'del' ? undefined : JSON.stringify(item) }).catch(() => alert('Server unreachable'));
-  } else localStorage.setItem('ems', JSON.stringify(S));
+    try {
+      const res = await fetch(m[0], { method: m[1], headers, body: op === 'del' ? undefined : JSON.stringify(item) });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        toast(err.error || 'Server error', 'error');
+        return false;
+      }
+    } catch {
+      localStorage.setItem('ems', JSON.stringify(S));
+    }
+  } else {
+    localStorage.setItem('ems', JSON.stringify(S));
+  }
+  render();
+  return true;
+}
+
+/* ---------- User & Permission Helpers ---------- */
+const me = () => {
+  const list = S.employees || [];
+  if (role === 'Admin') return list.find((e) => e.role === 'Admin') || list[0] || {};
+  if (role === 'HR') return list.find((e) => e.role === 'HR') || list[1] || list[0] || {};
+  return list.find((e) => e.id === 'emp-003') || list.find((e) => e.role === 'Employee') || list[0] || {};
+};
+const staff = () => role === 'Admin' || role === 'HR';
+const name = (e) => e ? `${e.firstName || ''} ${e.lastName || ''}`.trim() || 'User' : 'User';
+const sum = (a, f) => (a || []).reduce((s, x) => s + f(x), 0);
+const group = (a, f) => (a || []).reduce((m, x) => ((m[f(x)] = (m[f(x)] || []).concat(x)), m), {});
+
+const bars = (obj, fmt = (v) => v) => {
+  const entries = Object.entries(obj || {});
+  const mx = Math.max(1, ...Object.values(obj || {}));
+  return entries.map(([k, v]) => `
+    <div class="bl">
+      <span title="${esc(k)}">${esc(k)}</span>
+      <div class="bar-track"><div class="bar" style="width:${Math.round((v / mx) * 100)}%"></div></div>
+      <b>${fmt(v)}</b>
+    </div>
+  `).join('') || '<p style="color:var(--mute)">No activity records</p>';
+};
+
+/* ---------- Presentation Slide Content (From Academic PPTX) ---------- */
+const SLIDES = [
+  {
+    num: 1, tag: "WEB TECHNOLOGIES · B.TECH DS · SEMESTER PROJECT",
+    title: "Employee Management System",
+    sub: "A web-based platform to streamline employee records, attendance, and payroll workflows",
+    content: `
+      <div style="text-align:center;padding:40px 10px">
+        <div style="font-size:12px;font-weight:700;letter-spacing:1px;color:var(--pri);margin-bottom:8px">B.TECH DATA SCIENCE · COURSEWORK SUBMISSION</div>
+        <h1 style="font-size:32px;font-weight:800;color:var(--ink);margin:0 0 14px">Employee Management System</h1>
+        <p style="font-size:15px;color:var(--mute);max-width:620px;margin:0 auto 24px;line-height:1.6">A single-page, full-stack web application designed to centralize personnel management, automate daily punch attendance, streamline leave approval pipelines, and execute payroll computations with itemized payslips.</p>
+        <div style="display:inline-flex;gap:12px;background:var(--bg);padding:10px 20px;border-radius:10px;font-weight:600;font-size:13px;border:1px solid var(--line)">
+          <span>Subject: Web Technology</span> • <span>Program: B.Tech Data Science</span> • <span>University Submission</span>
+        </div>
+      </div>`
+  },
+  {
+    num: 2, tag: "THE CHALLENGE",
+    title: "Problem Statement",
+    sub: "Manual HR processes don't scale and introduce critical organizational bottlenecks",
+    content: `
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px">
+        <div>
+          <ul style="line-height:2;padding-left:20px;font-size:14px;color:var(--ink-secondary)">
+            <li><b>Scattered Records:</b> Personnel data fragmented across spreadsheets, paper files, and email threads.</li>
+            <li><b>Manual Tracking:</b> Attendance and leave tracking is slow, error-prone, and prone to disputes.</li>
+            <li><b>Payroll Delays:</b> Hand calculations of basic, HRA, PF, tax, and penalties cause payment delays.</li>
+            <li><b>No Central Visibility:</b> Management lacks centralized dashboards for active headcount and department costs.</li>
+            <li><b>Poor Data Security:</b> Sensitive salary records and employee identities are easily misplaced or leaked.</li>
+          </ul>
+        </div>
+        <div style="background:var(--bg);border-radius:14px;padding:24px;text-align:center;display:flex;flex-direction:column;justify-content:center;border:1px solid var(--line)">
+          <div style="font-size:52px;font-weight:800;color:var(--warn)">~40%</div>
+          <p style="margin:8px 0;font-weight:700;font-size:14px">of an HR team's time is lost to repetitive, manual administrative work.</p>
+          <p style="font-size:12.5px;color:var(--mute)">Organizations need a single, secure, web-based system to manage the full employee lifecycle accurately and efficiently.</p>
+        </div>
+      </div>`
+  },
+  {
+    num: 3, tag: "LANDSCAPE",
+    title: "Existing Solutions & Proposed Solution",
+    sub: "Bridging the gap between heavy enterprise suites and fragile spreadsheets",
+    content: `
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:20px">
+        <div style="background:var(--bad-light);border:1px solid var(--bad-border);padding:20px;border-radius:12px;color:var(--bad)">
+          <h3 style="margin:0 0 12px;font-size:15px;color:var(--bad)">✗ Existing Solutions</h3>
+          <p style="font-size:13px;line-height:1.6"><b>Enterprise HRMS (SAP, Workday):</b> Powerful but costly, complex to deploy, overkill for small/academic teams.</p>
+          <p style="font-size:13px;line-height:1.6"><b>Spreadsheets (Excel/Sheets):</b> Familiar and cheap, but lacks access control, real-time validation, and prone to human error.</p>
+          <p style="font-size:13px;line-height:1.6"><b>Generic Paid Tools (Zoho, Keka):</b> Feature-rich but locked behind monthly subscriptions with limited customization.</p>
+        </div>
+        <div style="background:var(--ok-light);border:1px solid var(--ok-border);padding:20px;border-radius:12px;color:var(--ok)">
+          <h3 style="margin:0 0 12px;font-size:15px;color:var(--ok)">✓ Proposed Solution (Our EMS)</h3>
+          <p style="font-size:13px;line-height:1.6"><b>Centralized Database:</b> Unified record store for personnel, departments, and designations.</p>
+          <p style="font-size:13px;line-height:1.6"><b>Role-Based Access:</b> Distinct workspaces for Admin, HR Specialists, and Employees.</p>
+          <p style="font-size:13px;line-height:1.6"><b>Digital Attendance & Leave:</b> Live punch-in/out logging and multi-type leave approval pipeline.</p>
+          <p style="font-size:13px;line-height:1.6"><b>Automated Payroll Engine:</b> 1-click batch salary generation and printable payslip receipts.</p>
+        </div>
+      </div>`
+  },
+  {
+    num: 4, tag: "GOALS",
+    title: "Project Objectives",
+    sub: "Six pillars designed to deliver a modern, resilient workforce management solution",
+    content: `
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px">
+        <div class="card" style="margin:0;border-left:4px solid var(--pri)"><b>1. Centralize Records</b><p style="font-size:12.5px;color:var(--mute);margin:6px 0 0">Build a single, secure database for personal, professional, and compensation records.</p></div>
+        <div class="card" style="margin:0;border-left:4px solid var(--pri)"><b>2. Automate Attendance</b><p style="font-size:12.5px;color:var(--mute);margin:6px 0 0">Enable digital check-in/out, live hour calculation, and automatic late detection.</p></div>
+        <div class="card" style="margin:0;border-left:4px solid var(--pri)"><b>3. Simplify Payroll</b><p style="font-size:12.5px;color:var(--mute);margin:6px 0 0">Auto-calculate Basic, HRA, Allowances, PF, Tax, and net payslips without manual math.</p></div>
+        <div class="card" style="margin:0;border-left:4px solid var(--pri)"><b>4. Role-based Access (RBAC)</b><p style="font-size:12.5px;color:var(--mute);margin:6px 0 0">Enforce granular permissions distinguishing Admin, HR management, and individual staff.</p></div>
+        <div class="card" style="margin:0;border-left:4px solid var(--pri)"><b>5. Interactive Reporting</b><p style="font-size:12.5px;color:var(--mute);margin:6px 0 0">Provide immediate visual analytics on departmental headcount, costs, and CSV export.</p></div>
+        <div class="card" style="margin:0;border-left:4px solid var(--pri)"><b>6. Responsive Usability</b><p style="font-size:12.5px;color:var(--mute);margin:6px 0 0">Deliver an accessible, responsive, dark-mode ready UI usable across all devices.</p></div>
+      </div>`
+  },
+  {
+    num: 5, tag: "BACKGROUND RESEARCH",
+    title: "Literature Review",
+    sub: "Academic and industry foundation supporting web-based workforce digitization",
+    content: `
+      <div class="table-wrapper">
+        <table>
+          <tr><th>Source / Study<th>Focus Domain<th>Key Insight & Academic Takeaway</tr>
+          <tr><td><b>Kavitha & Rani (2019)</b><br><small style="color:var(--mute)">IJCA</small></td><td>Web-based HR Information Systems</td><td>Centralized HRIS platforms reduce administrative workloads by >45% and eliminate manual record-keeping errors.</td></tr>
+          <tr><td><b>Patel et al. (2020)</b><br><small style="color:var(--mute)">IEEE</small></td><td>Cloud-based Payroll Automation</td><td>Automated payroll calculation engines cut disbursement cycles and human mathematical errors.</td></tr>
+          <tr><td><b>Sharma & Gupta (2021)</b><br><small style="color:var(--mute)">IJERT</small></td><td>Role-based Access Control (RBAC)</td><td>Granular authorization tiers are essential to secure employee confidentiality and compensation metrics.</td></tr>
+          <tr><td><b>Commercial HRMS</b><br><small style="color:var(--mute)">Zoho People / Keka</small></td><td>Commercial Workforce Tools</td><td>Validate real-world feature workflows, but create need for lightweight, zero-subscription academic solutions.</td></tr>
+        </table>
+      </div>`
+  },
+  {
+    num: 6, tag: "OUR APPROACH",
+    title: "Methodology & 3-Tier Web Architecture",
+    sub: "Engineered around standard web engineering principles for maintainability and scalability",
+    content: `
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="border-left:4px solid var(--pri);padding:12px 18px;background:var(--bg);border-radius:0 10px 10px 0">
+          <b>Tier 1: Presentation Layer (Frontend)</b>
+          <p style="margin:4px 0 0;font-size:13px;color:var(--mute)">Semantic HTML5, CSS3 Custom Properties (Dark/Light themes), responsive Flexbox/Grid, and vanilla JavaScript providing instant SPA responsiveness.</p>
+        </div>
+        <div style="border-left:4px solid var(--ok);padding:12px 18px;background:var(--bg);border-radius:0 10px 10px 0">
+          <b>Tier 2: Application Layer (Backend & REST API)</b>
+          <p style="margin:4px 0 0;font-size:13px;color:var(--mute)">Node.js & Express RESTful API with endpoints for state synchronization, transactional attendance punching, leave status workflows, and atomic payroll runs.</p>
+        </div>
+        <div style="border-left:4px solid var(--warn);padding:12px 18px;background:var(--bg);border-radius:0 10px 10px 0">
+          <b>Tier 3: Data Layer (Storage & Persistence)</b>
+          <p style="margin:4px 0 0;font-size:13px;color:var(--mute)">Persistent JSON entity storage with cascading integrity on employee removal, complemented by browser LocalStorage fallback for zero-downtime static demonstration.</p>
+        </div>
+      </div>
+      <div style="background:var(--bg);border-radius:10px;padding:12px;margin-top:16px;font-size:13px;text-align:center;border:1px solid var(--line)">
+        <b>Lifecycle:</b> Requirement Analysis → UI/UX Prototyping → Module Implementation → Integration & Unit Testing → Public Deployment
+      </div>`
+  },
+  {
+    num: 7, tag: "SPECIFICATIONS",
+    title: "System Requirements",
+    sub: "Software stack and hardware operational parameters for production and local environments",
+    content: `
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:20px">
+        <div class="card" style="margin:0">
+          <h3 style="margin-top:0;color:var(--pri);font-size:15px">Software Specifications</h3>
+          <p><b>Frontend:</b> HTML5, CSS3 (Modern Grid/Variables), JavaScript (ES6+)</p>
+          <p><b>Backend:</b> Node.js (v18+ / v24), Express.js (v4.21+)</p>
+          <p><b>Database:</b> Persistent JSON Database / Relational Data Model</p>
+          <p><b>Tools & VCS:</b> VS Code, Git, GitHub, Vercel / GitHub Pages</p>
+          <p><b>Browsers:</b> Chrome, Microsoft Edge, Firefox, Safari (Mobile & Desktop)</p>
+        </div>
+        <div class="card" style="margin:0">
+          <h3 style="margin-top:0;color:var(--ok);font-size:15px">Hardware Specifications</h3>
+          <p><b>Processor:</b> Dual-core 2.0 GHz CPU or higher</p>
+          <p><b>Memory (RAM):</b> 4 GB minimum (8 GB recommended for development)</p>
+          <p><b>Storage:</b> ~50 MB project footprint (10 GB free disk for OS & tooling)</p>
+          <p><b>Display:</b> Fully responsive from mobile 360px up to 4K displays</p>
+          <p><b>Connectivity:</b> HTTPS internet connection for CDN assets and API</p>
+        </div>
+      </div>`
+  },
+  {
+    num: 8, tag: "TIMELINE",
+    title: "Project Plan & Execution Timeline",
+    sub: "Nine-week structured development cycle spanning design, coding, testing, and deployment",
+    content: `
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px">
+        <div class="card" style="text-align:center;margin:0"><div class="tag">Week 1–2</div><h4 style="margin:10px 0 4px">Requirement Analysis</h4><p style="font-size:12px;color:var(--mute)">Scope definition, stakeholder needs, studying manual HR registers.</p></div>
+        <div class="card" style="text-align:center;margin:0"><div class="tag">Week 3–4</div><h4 style="margin:10px 0 4px">System Design</h4><p style="font-size:12px;color:var(--mute)">Data schema modeling, wireframing views, color palettes, and RBAC mapping.</p></div>
+        <div class="card" style="text-align:center;margin:0"><div class="tag">Week 5–7</div><h4 style="margin:10px 0 4px">Core Development</h4><p style="font-size:12px;color:var(--mute)">Building Employee, Attendance, Leave, Payroll, and Reports modules.</p></div>
+        <div class="card" style="text-align:center;margin:0"><div class="tag">Week 8</div><h4 style="margin:10px 0 4px">Testing & Refinement</h4><p style="font-size:12px;color:var(--mute)">CRUD verification, cascade delete checks, role access enforcement, UI polish.</p></div>
+        <div class="card" style="text-align:center;margin:0"><div class="tag">Week 9</div><h4 style="margin:10px 0 4px">Deployment & Demo</h4><p style="font-size:12px;color:var(--mute)">GitHub Pages & PaaS publishing, documentation, PPT presentation integration.</p></div>
+      </div>`
+  },
+  {
+    num: 9, tag: "RESULTS",
+    title: "Expected Outcomes & Verified Deliverables",
+    sub: "Concrete operational improvements delivered by the completed Web Technology project",
+    content: `
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:20px">
+        <div class="card" style="margin:0">
+          <p><b>✓ Unified Employee Database:</b> Searchable single source of truth across all 5 organizational departments.</p>
+          <p><b>✓ Digital Attendance Tracking:</b> 1-click punch in/out with automated late status detection and hour calculations.</p>
+          <p><b>✓ Leave Management Workflow:</b> Employee application with automatic category balance deduction upon HR review.</p>
+        </div>
+        <div class="card" style="margin:0">
+          <p><b>✓ Automated Payroll Engine:</b> Instant monthly compensation runs calculating HRA, PF deductions, taxes, and net totals.</p>
+          <p><b>✓ Role-Based Security:</b> Restricted Admin and HR capabilities ensuring employee financial confidentiality.</p>
+          <p><b>✓ Real-time Analytics & Export:</b> Live graphical department breakdown and instant CSV data export.</p>
+        </div>
+      </div>`
+  },
+  {
+    num: 10, tag: "IN SUMMARY",
+    title: "Key Takeaways & Academic Conclusions",
+    sub: "Full-stack web technologies harmonized to solve a critical real-world administrative problem",
+    content: `
+      <div style="background:var(--bg);border-radius:12px;padding:24px;margin-bottom:16px;border:1px solid var(--line)">
+        <ol style="line-height:2;padding-left:20px;font-size:14px;margin:0;color:var(--ink-secondary)">
+          <li><b>Replaces Error-Prone Manual Workflows:</b> Centralizes paper files and disjointed spreadsheets into one web dashboard.</li>
+          <li><b>Automates Payroll & Attendance:</b> Eliminates manual calculation mistakes, saving valuable administrative time.</li>
+          <li><b>Enforces Security:</b> Role-based access ensures sensitive employee records and payroll receipts remain safeguarded.</li>
+          <li><b>High Accessibility:</b> Zero heavy dependencies, lightning fast load time, and smooth mobile/desktop responsive design.</li>
+          <li><b>Web Technology Mastery:</b> A complete demonstration of client-side DOM manipulation, REST APIs, JSON state persistence, and responsive UI design.</li>
+        </ol>
+      </div>
+      <div style="text-align:center;padding:12px;font-weight:700;color:var(--pri);font-size:16px">
+        Thank You · Employee Management System Project
+      </div>`
+  }
+];
+
+/* ---------- Views ---------- */
+
+function login() {
+  return `
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-logo">EMS</div>
+      <h2 style="margin:0 0 6px;font-size:22px;font-weight:800;letter-spacing:-0.5px">Employee Management System</h2>
+      <p style="color:var(--mute);font-size:13px;margin:0 0 24px">Web Technology Academic Project Submission · Select a verified role to sign in</p>
+      
+      <button class="role-select-btn" onclick="signIn('Admin')">
+        <div class="user-avatar" style="background:#dc2626">AS</div>
+        <div>
+          <b>Aarav Sharma <span class="role-badge role-Admin">Admin</span></b>
+          <small>Senior Lead Engineer · Full administrative access, cascade deletes, employee setup</small>
+        </div>
+      </button>
+
+      <button class="role-select-btn" onclick="signIn('HR')">
+        <div class="user-avatar" style="background:#4f46e5">PP</div>
+        <div>
+          <b>Priya Patel <span class="role-badge role-HR">HR Specialist</span></b>
+          <small>Senior HR Specialist · Employee onboarding, leave reviews, payroll runs</small>
+        </div>
+      </button>
+
+      <button class="role-select-btn" onclick="signIn('Employee')">
+        <div class="user-avatar" style="background:#059669">RV</div>
+        <div>
+          <b>Rohan Verma <span class="role-badge role-Employee">Employee</span></b>
+          <small>Data Scientist · Personal punch in/out, self-service leave requests, payslips</small>
+        </div>
+      </button>
+
+      <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px">
+        <button class="g" style="width:100%;justify-content:center" onclick="tab='presentation';render()">
+          📊 View Project Presentation & Slides (.PPTX)
+        </button>
+        <span style="font-size:11.5px;color:var(--mute)">Mode: ${live ? 'REST API Connected (Express Server)' : 'Client-side Storage (GitHub Pages)'}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function dashboard() {
+  const E = S.employees || [];
+  const activeCount = E.filter((e) => e.status === 'Active').length;
+  const onLeaveCount = E.filter((e) => e.status === 'On Leave').length;
+  const pend = (S.leaves || []).filter((l) => l.status === 'Pending');
+  const mine = (S.attendance || []).find((a) => a.employeeId === me().id && a.date === today());
+  
+  // Calculate today's attendance metrics
+  const todayAtt = (S.attendance || []).filter((a) => a.date === today());
+  const todayPresent = todayAtt.filter((a) => a.status === 'Present' || a.status === 'Late').length;
+  const attRate = activeCount ? Math.round((todayPresent / activeCount) * 100) : 0;
+  const grossMonthly = sum(E, (e) => (e.salary?.basic || 0) + (e.salary?.hra || 0) + (e.salary?.allowances || 0));
+
+  // Recent activity stream (dynamic from database)
+  const recentLeaves = [...(S.leaves || [])].slice(0, 3);
+  const recentPunches = [...(S.attendance || [])].slice(0, 4);
+
+  return `
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Executive Dashboard</h1>
+      <p>Welcome back, <b>${esc(name(me()))}</b> (${role}) · Overview of workforce metrics and daily operations</p>
+    </div>
+    <div class="page-actions">
+      ${staff() ? `<button class="b" onclick="empForm()">+ Add Employee</button>` : ''}
+      ${staff() ? `<button class="g" onclick="runPayroll()">⚡ Run Payroll</button>` : ''}
+      <button class="g" onclick="tab='attendance';render()">⏱️ Attendance</button>
+      <button class="g" onclick="tab='leaves';render()">📅 Leave Requests</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="stat-card">
+      <div class="stat-header">
+        <span class="stat-title">Total Headcount</span>
+        <div class="stat-icon">👥</div>
+      </div>
+      <div class="stat-value">${E.length}</div>
+      <div class="stat-sub"><b style="color:var(--ok)">${activeCount} Active</b> · ${E.length - activeCount} Inactive/Leave</div>
+    </div>
+
+    <div class="stat-card ok">
+      <div class="stat-header">
+        <span class="stat-title">Today's Attendance</span>
+        <div class="stat-icon">⏱️</div>
+      </div>
+      <div class="stat-value">${attRate}%</div>
+      <div class="stat-sub"><b>${todayPresent}</b> of ${activeCount} active staff punched in</div>
+    </div>
+
+    <div class="stat-card warn">
+      <div class="stat-header">
+        <span class="stat-title">Staff On Leave</span>
+        <div class="stat-icon">🌴</div>
+      </div>
+      <div class="stat-value">${onLeaveCount}</div>
+      <div class="stat-sub"><b style="color:var(--warn)">${pend.length}</b> pending approvals</div>
+    </div>
+
+    <div class="stat-card info">
+      <div class="stat-header">
+        <span class="stat-title">Monthly Gross Payroll</span>
+        <div class="stat-icon">₹</div>
+      </div>
+      <div class="stat-value">${inr(grossMonthly)}</div>
+      <div class="stat-sub">Disbursed across ${E.length} employee accounts</div>
+    </div>
+  </div>
+
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr));margin-top:20px">
+    <!-- Today's Punch Widget -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-header">
+        <h3 class="card-title">⏱️ Your Punch Status Today</h3>
+        <span class="tag ${mine ? mine.status : 'Pending'}">${mine ? mine.status : 'Not Punched'}</span>
+      </div>
+      <div style="background:var(--bg);border-radius:var(--radius);padding:16px;border:1px solid var(--line);margin-bottom:14px">
+        ${
+          mine
+            ? (mine.checkOut && mine.checkOut !== '-'
+                ? `<div>
+                    <div style="font-weight:700;color:var(--ok);margin-bottom:4px">✓ Shift Completed</div>
+                    <div style="font-size:13px;color:var(--ink-secondary)">Checked in: <b>${esc(mine.checkIn)}</b> · Checked out: <b>${esc(mine.checkOut)}</b></div>
+                    <div style="font-size:12px;color:var(--mute);margin-top:4px">Total Hours: <b>${mine.workHours} hrs</b></div>
+                  </div>`
+                : `<div>
+                    <div style="font-weight:700;color:var(--warn);margin-bottom:4px">⏳ Active Shift in Progress</div>
+                    <div style="font-size:13px;color:var(--ink-secondary)">Checked in at <b>${esc(mine.checkIn)}</b> (${mine.status}). Remember to punch out before leaving.</div>
+                  </div>`)
+            : `<div>
+                <div style="font-weight:700;color:var(--mute);margin-bottom:4px">No Entry Recorded Today</div>
+                <div style="font-size:13px;color:var(--mute)">Click the Punch In button to mark your daily attendance.</div>
+              </div>`
+        }
+      </div>
+      <div>
+        ${
+          !mine
+            ? `<button class="b" style="width:100%;justify-content:center" onclick="punch()">Punch In Now</button>`
+            : (!mine.checkOut || mine.checkOut === '-'
+                ? `<button class="b" style="width:100%;justify-content:center;background:var(--warn)" onclick="punchOut()">Punch Out Now (End Shift)</button>`
+                : `<button class="g" style="width:100%;justify-content:center" disabled>Shift Logged for Today</button>`)
+        }
+      </div>
+    </div>
+
+    <!-- Headcount by Department -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-header">
+        <h3 class="card-title">🏢 Headcount by Department</h3>
+        <small style="color:var(--mute)">${E.length} Employees</small>
+      </div>
+      <div>
+        ${bars(Object.fromEntries(Object.entries(group(E, (e) => e.department)).map(([k, v]) => [k, v.length])))}
+      </div>
+    </div>
+  </div>
+
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr));margin-top:20px">
+    <!-- Departmental Payroll Allocation -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-header">
+        <h3 class="card-title">💰 Departmental Payroll Expenditure</h3>
+        <small style="color:var(--mute)">Monthly</small>
+      </div>
+      <div>
+        ${bars(Object.fromEntries(Object.entries(group(E, (e) => e.department)).map(([k, v]) => [k, sum(v, (x) => (x.salary?.basic || 0) + (x.salary?.hra || 0) + (x.salary?.allowances || 0))])), inr)}
+      </div>
+    </div>
+
+    <!-- Recent System Activity -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-header">
+        <h3 class="card-title">🔔 Recent Activity Feed</h3>
+        <small style="color:var(--mute)">Live Events</small>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        ${recentLeaves.map((l) => `
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--line);font-size:13px">
+            <div>
+              <b>${esc(l.employeeName)}</b> applied for <b>${l.leaveType} Leave</b> (${l.days} days)
+              <div style="font-size:11.5px;color:var(--mute)">${l.startDate} to ${l.endDate}</div>
+            </div>
+            <span class="tag ${l.status}">${l.status}</span>
+          </div>
+        `).join('')}
+        ${recentPunches.slice(0, 2).map((a) => `
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--line);font-size:13px">
+            <div>
+              <b>${esc(a.employeeName)}</b> punched in at <b>${esc(a.checkIn)}</b>
+              <div style="font-size:11.5px;color:var(--mute)">Date: ${a.date} · ${esc(a.department)}</div>
+            </div>
+            <span class="tag ${a.status}">${a.status}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function employees() {
+  const departments = [...new Set((S.employees || []).map((e) => e.department))];
+  let filtered = (S.employees || []).filter((e) => {
+    const matchQ = (name(e) + e.department + e.designation + e.employeeCode + (e.email || '')).toLowerCase().includes(q.toLowerCase());
+    const matchDept = !empDept || e.department === empDept;
+    const matchStatus = !empStatus || e.status === empStatus;
+    const matchRole = !empRole || e.role === empRole;
+    return matchQ && matchDept && matchStatus && matchRole;
+  });
+
+  // Sorting
+  filtered.sort((a, b) => {
+    if (empSort === 'name-asc') return name(a).localeCompare(name(b));
+    if (empSort === 'name-desc') return name(b).localeCompare(name(a));
+    if (empSort === 'code') return a.employeeCode.localeCompare(b.employeeCode);
+    if (empSort === 'salary-desc') return (b.salary?.basic || 0) - (a.salary?.basic || 0);
+    if (empSort === 'salary-asc') return (a.salary?.basic || 0) - (b.salary?.basic || 0);
+    return 0;
+  });
+
+  // Pagination
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / empPerPage));
+  if (empPage > totalPages) empPage = totalPages;
+  const startIdx = (empPage - 1) * empPerPage;
+  const pagedList = filtered.slice(startIdx, startIdx + empPerPage);
+
+  return `
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Employee Directory</h1>
+      <p>Manage personnel master records, compensation structures, roles, and profiles</p>
+    </div>
+    <div class="page-actions">
+      ${staff() ? `<button class="b" onclick="empForm()">+ Add New Employee</button>` : ''}
+      <button class="g" onclick="exportCSV()">📥 Export CSV</button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:16px;margin-bottom:16px">
+    <div class="row" style="margin-bottom:0">
+      <input style="flex:2;min-width:220px" placeholder="Search by name, code, designation, email..." value="${esc(q)}" oninput="q=this.value;empPage=1;render(true)">
+      
+      <select style="flex:1;min-width:160px" onchange="empDept=this.value;empPage=1;render()">
+        <option value="">All Departments</option>
+        ${departments.map((d) => `<option value="${esc(d)}"${empDept === d ? ' selected' : ''}>${esc(d)}</option>`).join('')}
+      </select>
+
+      <select style="flex:1;min-width:140px" onchange="empStatus=this.value;empPage=1;render()">
+        <option value="">All Statuses</option>
+        <option value="Active"${empStatus === 'Active' ? ' selected' : ''}>Active</option>
+        <option value="On Leave"${empStatus === 'On Leave' ? ' selected' : ''}>On Leave</option>
+        <option value="Inactive"${empStatus === 'Inactive' ? ' selected' : ''}>Inactive</option>
+      </select>
+
+      <select style="flex:1;min-width:140px" onchange="empSort=this.value;render()">
+        <option value="name-asc"${empSort === 'name-asc' ? ' selected' : ''}>Sort: Name (A-Z)</option>
+        <option value="name-desc"${empSort === 'name-desc' ? ' selected' : ''}>Sort: Name (Z-A)</option>
+        <option value="code"${empSort === 'code' ? ' selected' : ''}>Sort: Code</option>
+        <option value="salary-desc"${empSort === 'salary-desc' ? ' selected' : ''}>Sort: Salary (High to Low)</option>
+        <option value="salary-asc"${empSort === 'salary-asc' ? ' selected' : ''}>Sort: Salary (Low to High)</option>
+      </select>
+
+      ${q || empDept || empStatus || empRole ? `<button class="g" onclick="q='';empDept='';empStatus='';empRole='';render()">Reset</button>` : ''}
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Employee</th>
+          <th>Department</th>
+          <th>Designation</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Basic Pay</th>
+          <th style="text-align:right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${pagedList.map((e) => `
+          <tr>
+            <td><span style="font-family:'JetBrains Mono', monospace;font-weight:700;color:var(--pri)">${esc(e.employeeCode)}</span></td>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="viewProfile('${e.id}')">
+                <div class="user-avatar" style="background:${e.role==='Admin'?'#dc2626':e.role==='HR'?'#4f46e5':'#059669'}">
+                  ${(e.firstName?.[0]||'')+((e.lastName?.[0])||'')}
+                </div>
+                <div>
+                  <b style="color:var(--ink)">${esc(name(e))}</b>
+                  <div style="font-size:12px;color:var(--mute)">${esc(e.email)}</div>
+                </div>
+              </div>
+            </td>
+            <td>${esc(e.department)}</td>
+            <td>${esc(e.designation)}</td>
+            <td><span class="role-badge role-${e.role}">${e.role}</span></td>
+            <td><span class="tag ${e.status}">${e.status}</span></td>
+            <td><b>${inr(e.salary?.basic || 0)}</b></td>
+            <td style="text-align:right">
+              <button class="g sm" onclick="viewProfile('${e.id}')">Profile</button>
+              ${staff() ? `<button class="g sm" onclick="empForm('${e.id}')">Edit</button>` : ''}
+              ${role === 'Admin' ? `<button class="g sm danger" onclick="delEmp('${e.id}')">Delete</button>` : ''}
+            </td>
+          </tr>
+        `).join('')}
+        ${pagedList.length === 0 ? `<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--mute)">No employee records match the selected filter criteria.</td></tr>` : ''}
+      </tbody>
+    </table>
+    
+    <div class="pagination">
+      <div style="font-size:13px;color:var(--mute)">
+        Showing <b>${total ? startIdx + 1 : 0}</b>–<b>${Math.min(startIdx + empPerPage, total)}</b> of <b>${total}</b> employees
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="g sm" ${empPage <= 1 ? 'disabled style="opacity:0.4"' : ''} onclick="empPage--;render()">← Previous</button>
+        <span style="font-size:13px;padding:0 8px;font-weight:600">Page ${empPage} of ${totalPages}</span>
+        <button class="g sm" ${empPage >= totalPages ? 'disabled style="opacity:0.4"' : ''} onclick="empPage++;render()">Next →</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function attendance() {
+  const A = staff() ? (S.attendance || []) : (S.attendance || []).filter((a) => a.employeeId === me().id);
+  const mine = (S.attendance || []).find((a) => a.employeeId === me().id && a.date === today());
+
+  // Filter attendance log
+  const filtered = A.filter((a) => {
+    const matchDate = !attDate || a.date === attDate;
+    const matchStatus = !attStatus || a.status === attStatus;
+    return matchDate && matchStatus;
+  });
+
+  // Calculate metrics
+  const totalLogs = A.length;
+  const presentCount = A.filter((x) => x.status === 'Present').length;
+  const lateCount = A.filter((x) => x.status === 'Late').length;
+  const onLeaveCount = A.filter((x) => x.status === 'On Leave').length;
+
+  return `
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Attendance Tracking</h1>
+      <p>Log daily shifts, track punch-in and punch-out timestamps, and inspect organizational presence</p>
+    </div>
+  </div>
+
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:20px">
+    <div class="stat-card ok">
+      <div class="stat-title">Present Days</div>
+      <div class="stat-value">${presentCount}</div>
+      <div class="stat-sub">Timely arrivals</div>
+    </div>
+    <div class="stat-card warn">
+      <div class="stat-title">Late Arrivals</div>
+      <div class="stat-value">${lateCount}</div>
+      <div class="stat-sub">Past 10:00 AM</div>
+    </div>
+    <div class="stat-card info">
+      <div class="stat-title">Approved Leaves</div>
+      <div class="stat-value">${onLeaveCount}</div>
+      <div class="stat-sub">Active leave days</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Total Records</div>
+      <div class="stat-value">${totalLogs}</div>
+      <div class="stat-sub">Logged entries</div>
+    </div>
+  </div>
+
+  <!-- Today's Punch Action Bar -->
+  <div class="card" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;background:linear-gradient(to right, var(--card), var(--pri-light))">
+    <div>
+      <h3 style="margin:0 0 4px;font-size:16px;font-weight:700">Today's Shift: ${today()}</h3>
+      <p style="margin:0;color:var(--mute);font-size:13px">
+        ${mine
+          ? (mine.checkOut && mine.checkOut !== '-'
+              ? `Shift completed: Checked in at <b>${esc(mine.checkIn)}</b>, Checked out at <b>${esc(mine.checkOut)}</b> (<b>${mine.workHours} hrs</b>)`
+              : `Checked in at <b>${esc(mine.checkIn)}</b> (<span class="tag ${mine.status}">${mine.status}</span>). Ready to punch out.`)
+          : `You have not recorded your attendance for today yet.`}
+      </p>
+    </div>
+    <div>
+      ${!mine
+        ? `<button class="b" onclick="punch()">⏱️ Punch In Now</button>`
+        : (!mine.checkOut || mine.checkOut === '-'
+            ? `<button class="b" style="background:var(--warn)" onclick="punchOut()">⏱️ Punch Out Now</button>`
+            : `<span class="tag ok">✓ Shift Finished</span>`)}
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="card" style="padding:14px;margin-bottom:16px">
+    <div class="row" style="margin-bottom:0">
+      <div style="flex:1;min-width:180px">
+        <label style="font-size:11px;font-weight:700;color:var(--mute);text-transform:uppercase;display:block;margin-bottom:4px">Filter By Date</label>
+        <input type="date" value="${esc(attDate)}" onchange="attDate=this.value;render()">
+      </div>
+      <div style="flex:1;min-width:180px">
+        <label style="font-size:11px;font-weight:700;color:var(--mute);text-transform:uppercase;display:block;margin-bottom:4px">Filter By Status</label>
+        <select onchange="attStatus=this.value;render()">
+          <option value="">All Statuses</option>
+          <option value="Present"${attStatus==='Present'?' selected':''}>Present</option>
+          <option value="Late"${attStatus==='Late'?' selected':''}>Late</option>
+          <option value="Half-Day"${attStatus==='Half-Day'?' selected':''}>Half-Day</option>
+          <option value="Absent"${attStatus==='Absent'?' selected':''}>Absent</option>
+          <option value="On Leave"${attStatus==='On Leave'?' selected':''}>On Leave</option>
+        </select>
+      </div>
+      ${attDate || attStatus ? `<div style="align-self:flex-end"><button class="g" onclick="attDate='';attStatus='';render()">Reset</button></div>` : ''}
+    </div>
+  </div>
+
+  <!-- Attendance Table -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Date</th>
+          <th>Check-In</th>
+          <th>Check-Out</th>
+          <th>Work Hours</th>
+          <th>Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${filtered.map((a) => `
+          <tr>
+            <td>
+              <b>${esc(a.employeeName)}</b>
+              <div style="font-size:12px;color:var(--mute)">${esc(a.department)}</div>
+            </td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px">${a.date}</span></td>
+            <td><b>${esc(a.checkIn)}</b></td>
+            <td>${esc(a.checkOut || '—')}</td>
+            <td><b style="color:var(--pri)">${a.workHours ? a.workHours + ' hrs' : '—'}</b></td>
+            <td>
+              ${staff()
+                ? `<select style="padding:4px 8px;font-size:12px;font-weight:600" onchange="setAtt('${a.id}',this.value)">
+                    ${['Present', 'Late', 'Half-Day', 'Absent', 'On Leave'].map((s) => `<option${s === a.status ? ' selected' : ''}>${s}</option>`).join('')}
+                   </select>`
+                : `<span class="tag ${a.status}">${a.status}</span>`}
+            </td>
+            <td><small style="color:var(--mute)">${esc(a.notes || '—')}</small></td>
+          </tr>
+        `).join('')}
+        ${filtered.length === 0 ? `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--mute)">No attendance records found.</td></tr>` : ''}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function leaves() {
+  const L = staff() ? (S.leaves || []) : (S.leaves || []).filter((l) => l.employeeId === me().id);
+  const myBal = me().leaveBalance || { casual: 8, sick: 8, paid: 12 };
+
+  const filtered = L.filter((l) => leaveFilter === 'All' || l.status === leaveFilter);
+
+  return `
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Leave Management</h1>
+      <p>Submit personal leave applications, track quota balances, and review organizational time-off requests</p>
+    </div>
+  </div>
+
+  <!-- Quota Balance Cards -->
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:20px">
+    <div class="stat-card">
+      <div class="stat-title">Casual Leave</div>
+      <div class="stat-value" style="color:var(--pri)">${myBal.casual} <span style="font-size:14px;color:var(--mute)">days</span></div>
+      <div class="stat-sub">Personal / family events</div>
+    </div>
+    <div class="stat-card warn">
+      <div class="stat-title">Sick Leave</div>
+      <div class="stat-value" style="color:var(--warn)">${myBal.sick} <span style="font-size:14px;color:var(--mute)">days</span></div>
+      <div class="stat-sub">Medical consultations</div>
+    </div>
+    <div class="stat-card ok">
+      <div class="stat-title">Paid / Privilege</div>
+      <div class="stat-value" style="color:var(--ok)">${myBal.paid} <span style="font-size:14px;color:var(--mute)">days</span></div>
+      <div class="stat-sub">Annual vacation allowance</div>
+    </div>
+  </div>
+
+  <!-- Apply Leave Form -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">📅 Apply for Leave</h3>
+      <span style="font-size:12px;color:var(--mute)">Request time off with automatic balance deduction upon review</span>
+    </div>
+    <form class="fg" onsubmit="applyLeave(event)">
+      <div class="input-group">
+        <label>Leave Category</label>
+        <select name="t">
+          <option value="Casual">Casual Leave (${myBal.casual} available)</option>
+          <option value="Sick">Sick Leave (${myBal.sick} available)</option>
+          <option value="Paid">Paid Leave (${myBal.paid} available)</option>
+          <option value="Unpaid">Unpaid Leave</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Start Date</label>
+        <input type="date" name="s" value="${today()}" required>
+      </div>
+      <div class="input-group">
+        <label>End Date</label>
+        <input type="date" name="e" value="${today()}" required>
+      </div>
+      <div class="input-group" style="grid-column:span 2">
+        <label>Reason for Leave</label>
+        <input name="r" placeholder="Brief explanation for leave request..." required>
+      </div>
+      <div style="align-self:end">
+        <button class="b" style="width:100%;justify-content:center">Submit Application</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Requests Table Header & Filter -->
+  <div class="card" style="padding:14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+    <b style="font-size:15px">Leave Requests & Review History</b>
+    <div style="display:flex;gap:6px">
+      ${['All', 'Pending', 'Approved', 'Rejected'].map((status) => `
+        <button class="${leaveFilter === status ? 'b' : 'g'} sm" onclick="leaveFilter='${status}';render()">${status}</button>
+      `).join('')}
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Type</th>
+          <th>Dates</th>
+          <th>Days</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Reviewer Notes</th>
+          ${staff() ? `<th style="text-align:right">Action</th>` : ''}
+        </tr>
+      </thead>
+      <tbody>
+        ${filtered.map((l) => `
+          <tr>
+            <td>
+              <b>${esc(l.employeeName)}</b>
+              <div style="font-size:12px;color:var(--mute)">${esc(l.department)}</div>
+            </td>
+            <td><span class="tag ${l.leaveType}">${l.leaveType}</span></td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12.5px">${l.startDate} to ${l.endDate}</span></td>
+            <td><b>${l.days}</b> day(s)</td>
+            <td style="max-width:240px;overflow:hidden;text-overflow:ellipsis" title="${esc(l.reason)}">${esc(l.reason)}</td>
+            <td><span class="tag ${l.status}">${l.status}</span></td>
+            <td><small style="color:var(--mute)">${esc(l.reviewedBy ? `${l.reviewedBy} at ${l.reviewedAt}` : 'Awaiting review')}</small></td>
+            ${staff() ? `
+              <td style="text-align:right">
+                ${l.status === 'Pending' ? `
+                  <button class="b sm success" onclick="review('${l.id}','Approved')">Approve</button>
+                  <button class="b sm danger" onclick="review('${l.id}','Rejected')">Reject</button>
+                ` : `<span style="font-size:12px;color:var(--mute)">Reviewed</span>`}
+              </td>
+            ` : ''}
+          </tr>
+        `).join('')}
+        ${filtered.length === 0 ? `<tr><td colspan="${staff()?8:7}" style="text-align:center;padding:32px;color:var(--mute)">No leave applications found for this filter.</td></tr>` : ''}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function payroll() {
+  const P = staff() ? (S.payroll || []) : (S.payroll || []).filter((p) => p.employeeId === me().id);
+  const currentMonth = new Date().toLocaleString('en', { month: 'long', year: 'numeric' });
+  const months = [...new Set((S.payroll || []).map((p) => p.month))];
+
+  const filtered = P.filter((p) => !payrollMonth || p.month === payrollMonth);
+
+  const totalGross = sum(filtered, (x) => x.grossSalary || 0);
+  const totalTax = sum(filtered, (x) => x.taxDeduction || 0);
+  const totalPF = sum(filtered, (x) => x.pfDeduction || 0);
+  const totalNet = sum(filtered, (x) => x.netSalary || 0);
+
+  return `
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Payroll & Compensation</h1>
+      <p>Automate statutory monthly compensation, calculate tax/PF deductions, and generate printable payslips</p>
+    </div>
+    <div class="page-actions">
+      ${staff() ? `<button class="b" onclick="runPayroll()">⚡ Run Automated Payroll for ${currentMonth}</button>` : ''}
+      <button class="g" onclick="exportPayrollCSV()">📥 Export Payroll CSV</button>
+    </div>
+  </div>
+
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:20px">
+    <div class="stat-card">
+      <div class="stat-title">Gross Earnings</div>
+      <div class="stat-value">${inr(totalGross)}</div>
+      <div class="stat-sub">Before tax & statutory deductions</div>
+    </div>
+    <div class="stat-card warn">
+      <div class="stat-title">Tax Withheld</div>
+      <div class="stat-value" style="color:var(--bad)">-${inr(totalTax)}</div>
+      <div class="stat-sub">Income tax deductions</div>
+    </div>
+    <div class="stat-card info">
+      <div class="stat-title">Provident Fund (PF)</div>
+      <div class="stat-value" style="color:var(--warn)">-${inr(totalPF)}</div>
+      <div class="stat-sub">12% statutory employee share</div>
+    </div>
+    <div class="stat-card ok">
+      <div class="stat-title">Net Disbursed</div>
+      <div class="stat-value" style="color:var(--ok)">${inr(totalNet)}</div>
+      <div class="stat-sub">Total take-home pay</div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+    <b style="font-size:15px">Disbursement Records (${filtered.length} entries)</b>
+    <div style="display:flex;gap:10px;align-items:center">
+      <select style="max-width:200px" onchange="payrollMonth=this.value;render()">
+        <option value="">All Pay Cycles</option>
+        ${months.map((m) => `<option value="${esc(m)}"${payrollMonth === m ? ' selected' : ''}>${esc(m)}</option>`).join('')}
+      </select>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Month</th>
+          <th>Basic Pay</th>
+          <th>Gross Earnings</th>
+          <th>Tax</th>
+          <th>PF</th>
+          <th>Net Salary</th>
+          <th>Status</th>
+          <th style="text-align:right">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${filtered.map((p) => `
+          <tr>
+            <td>
+              <b>${esc(p.employeeName)}</b>
+              <div style="font-size:12px;color:var(--mute)">${esc(p.designation)} · ${esc(p.department)}</div>
+            </td>
+            <td><span style="font-weight:600">${esc(p.month)}</span></td>
+            <td>${inr(p.basicSalary)}</td>
+            <td><b>${inr(p.grossSalary)}</b></td>
+            <td style="color:var(--bad)">-${inr(p.taxDeduction)}</td>
+            <td style="color:var(--warn)">-${inr(p.pfDeduction)}</td>
+            <td><b style="color:var(--ok);font-size:14px">${inr(p.netSalary)}</b></td>
+            <td><span class="tag ${p.status}">${p.status}</span></td>
+            <td style="text-align:right">
+              <button class="g sm" onclick="payslip('${p.id}')">📄 Payslip</button>
+            </td>
+          </tr>
+        `).join('')}
+        ${filtered.length === 0 ? `<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--mute)">No payroll records found for this period.</td></tr>` : ''}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function reports() {
+  const E = S.employees || [];
+  const dep = group(E, (e) => e.department);
+  const cnt = (a, f) => Object.fromEntries(Object.entries(group(a || [], f)).map(([k, v]) => [k, v.length]));
+
+  return `
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Analytics & HR Intelligence</h1>
+      <p>Visual reporting, departmental allocation analytics, and data export suite</p>
+    </div>
+    <div class="page-actions">
+      <button class="b" onclick="exportCSV()">📥 Export Employees CSV</button>
+      <button class="g" onclick="exportAttendanceCSV()">📥 Export Attendance CSV</button>
+      <button class="g" onclick="exportPayrollCSV()">📥 Export Payroll CSV</button>
+    </div>
+  </div>
+
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px">
+    <div class="card" style="margin:0">
+      <div class="card-header"><h3 class="card-title">💰 Gross Payroll by Department</h3></div>
+      <div>
+        ${bars(Object.fromEntries(Object.entries(dep).map(([k, v]) => [k, sum(v, (x) => (x.salary?.basic || 0) + (x.salary?.hra || 0) + (x.salary?.allowances || 0))])), inr)}
+      </div>
+    </div>
+
+    <div class="card" style="margin:0">
+      <div class="card-header"><h3 class="card-title">⏱️ Workforce Attendance Distribution</h3></div>
+      <div>
+        ${bars(cnt(S.attendance, (a) => a.status))}
+      </div>
+    </div>
+
+    <div class="card" style="margin:0">
+      <div class="card-header"><h3 class="card-title">🌴 Leave Applications by Status</h3></div>
+      <div>
+        ${bars(cnt(S.leaves, (l) => l.status))}
+      </div>
+    </div>
+
+    <div class="card" style="margin:0">
+      <div class="card-header"><h3 class="card-title">👥 Headcount Distribution by Status</h3></div>
+      <div>
+        ${bars(cnt(E, (e) => e.status))}
+      </div>
+    </div>
+  </div>`;
+}
+
+function presentation() {
+  const cur = SLIDES.find((s) => s.num === slideIdx) || SLIDES[0];
+
+  return `
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Academic Project Presentation</h1>
+      <p>Web Technology · Semester Project · Interactive Slide Deck & Downloadable PowerPoint (.PPTX)</p>
+    </div>
+    <div class="page-actions">
+      <a href="Employee_Management_System.pptx" download="Employee_Management_System.pptx" class="b">
+        📥 Download Original PowerPoint (.pptx)
+      </a>
+      <button class="g" onclick="slideMode=slideMode==='single'?'all':'single';render()">
+        ${slideMode === 'single' ? 'View All 10 Slides' : 'Slideshow Mode'}
+      </button>
+    </div>
+  </div>
+
+  ${slideMode === 'single' ? `
+    <div class="slide-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span class="slide-badge">${cur.tag}</span>
+        <span style="font-weight:700;color:var(--mute);font-size:13px">Slide ${cur.num} of ${SLIDES.length}</span>
+      </div>
+      <h2 class="slide-title">${cur.title}</h2>
+      <div class="slide-subtitle">${cur.sub}</div>
+      <div>${cur.content}</div>
+    </div>
+
+    <div class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:16px">
+      <button class="g" ${slideIdx <= 1 ? 'disabled style="opacity:0.4"' : ''} onclick="slideIdx=Math.max(1,slideIdx-1);render()">
+        ← Previous Slide
+      </button>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
+        ${SLIDES.map((s) => `
+          <button class="${s.num === slideIdx ? 'b' : 'g'} sm" onclick="slideIdx=${s.num};render()">${s.num}</button>
+        `).join('')}
+      </div>
+      <button class="b" ${slideIdx >= SLIDES.length ? 'disabled style="opacity:0.4"' : ''} onclick="slideIdx=Math.min(SLIDES.length,slideIdx+1);render()">
+        Next Slide →
+      </button>
+    </div>
+  ` : `
+    <div style="display:flex;flex-direction:column;gap:20px">
+      ${SLIDES.map((s) => `
+        <div class="slide-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <span class="slide-badge">${s.tag}</span>
+            <span style="font-weight:700;color:var(--mute);font-size:13px">Slide ${s.num} of ${SLIDES.length}</span>
+          </div>
+          <h2 class="slide-title">${s.title}</h2>
+          <div class="slide-subtitle">${s.sub}</div>
+          <div>${s.content}</div>
+        </div>
+      `).join('')}
+    </div>
+  `}`;
+}
+
+/* ---------- Main Render Engine ---------- */
+const views = { dashboard, employees, attendance, leaves, payroll, reports, presentation };
+
+function render(keepFocus) {
+  if (!role && tab !== 'presentation') {
+    $('#app').innerHTML = login();
+    return;
+  }
+
+  const f = keepFocus && document.activeElement?.tagName === 'INPUT';
+  const u = me();
+
+  $('#app').innerHTML = `
+  <header>
+    <div class="header-inner">
+      <div class="brand" onclick="tab='dashboard';render()">
+        <div class="brand-icon">E</div>
+        <div class="brand-text">
+          <b>Employee Management System</b>
+          <span>Enterprise Portal</span>
+        </div>
+      </div>
+
+      <nav>
+        ${['dashboard', 'employees', 'attendance', 'leaves', 'payroll', 'reports', 'presentation']
+          .filter((t) => t !== 'reports' || staff())
+          .map((t) => `
+            <button class="${t === tab ? 'on' : ''}" onclick="tab='${t}';render()">
+              ${t === 'presentation' ? '📊 Presentation' : t[0].toUpperCase() + t.slice(1)}
+            </button>
+          `).join('')}
+      </nav>
+
+      <div class="user-menu">
+        ${role ? `
+          <div class="user-badge">
+            <div class="user-avatar">${(u.firstName?.[0]||'')+((u.lastName?.[0])||'')}</div>
+            <div>
+              <div class="user-name">${esc(name(u))}</div>
+            </div>
+            <span class="role-badge role-${role}">${role}</span>
+          </div>
+          <button class="g sm" onclick="signOut()">Sign Out</button>
+        ` : `
+          <button class="b sm" onclick="tab='dashboard';signOut()">Sign In</button>
+        `}
+      </div>
+    </div>
+  </header>
+  <main>${views[tab]()}</main>`;
+
+  if (f) {
+    const i = $('main input');
+    if (i) { i.focus(); i.setSelectionRange(99, 99); }
+  }
+}
+
+/* ---------- Interaction Handlers ---------- */
+function signIn(r) {
+  role = r;
+  sessionStorage.setItem('role', r);
+  tab = 'dashboard';
+  toast(`Signed in as ${r} (${name(me())})`, 'success');
   render();
 }
 
-/* ---------- helpers ---------- */
-const me = () => S.employees.find((e) => e.role === role && (role !== 'Employee' || e.id === 'emp-003')) || S.employees.find((e) => e.role === role) || S.employees[0];
-const staff = () => role !== 'Employee';
-const name = (e) => `${e.firstName} ${e.lastName}`;
-const sum = (a, f) => a.reduce((s, x) => s + f(x), 0);
-const group = (a, f) => a.reduce((m, x) => ((m[f(x)] = (m[f(x)] || []).concat(x)), m), {});
-const bars = (obj, fmt = (v) => v) => { const mx = Math.max(1, ...Object.values(obj));
-  return Object.entries(obj).map(([k, v]) => `<div class="bl"><span>${esc(k)}</span><div class="bar" style="width:${(v / mx) * 100}%"></div><b>${fmt(v)}</b></div>`).join('') || '<p class="mode">No data</p>'; };
-
-/* ---------- views ---------- */
-function login() {
-  return `<div class="login card"><h2>Employee Management System</h2><p class="mode">Choose a role to sign in${live ? ' (API connected)' : ' (demo mode, data saved in this browser)'}</p>
-  ${['Admin', 'HR', 'Employee'].map((r) => `<button class="b" onclick="signIn('${r}')">Continue as ${r}</button>`).join('')}</div>`;
-}
-function dashboard() {
-  const E = S.employees, pend = S.leaves.filter((l) => l.status === 'Pending');
-  const mine = S.attendance.find((a) => a.employeeId === me().id && a.date === today());
-  return `<h2>Dashboard</h2><div class="grid">
-  <div class="card stat"><small>Employees</small><div>${E.length}</div></div>
-  <div class="card stat"><small>Active</small><div>${E.filter((e) => e.status === 'Active').length}</div></div>
-  <div class="card stat"><small>On leave</small><div>${E.filter((e) => e.status === 'On Leave').length}</div></div>
-  <div class="card stat"><small>Pending leave requests</small><div>${pend.length}</div></div>
-  <div class="card stat"><small>Monthly gross</small><div>${inr(sum(E, (e) => e.salary.basic + e.salary.hra + e.salary.allowances))}</div></div></div>
-  <div class="card"><b>Today:</b> ${mine ? `checked in at ${esc(mine.checkIn)} <span class="tag ${mine.status}">${mine.status}</span>` : `You haven't punched in yet. <button class="b" onclick="punch()">Punch in</button>`}</div>
-  <div class="card"><b>Headcount by department</b>${bars(Object.fromEntries(Object.entries(group(E, (e) => e.department)).map(([k, v]) => [k, v.length])))}</div>`;
-}
-function employees() {
-  const list = S.employees.filter((e) => (name(e) + e.department + e.designation + e.employeeCode).toLowerCase().includes(q.toLowerCase()));
-  return `<h2>Employee Directory</h2><div class="row"><input placeholder="Search name, department, code" value="${esc(q)}" oninput="q=this.value;render(true)">
-  ${staff() ? `<button class="b" onclick="empForm()">+ Add employee</button>` : ''}</div>
-  <div class="card scroll"><table><tr><th>Code<th>Name<th>Department<th>Designation<th>Role<th>Status<th></tr>
-  ${list.map((e) => `<tr><td>${esc(e.employeeCode)}<td>${esc(name(e))}<br><small class="mode">${esc(e.email)}</small><td>${esc(e.department)}<td>${esc(e.designation)}<td>${e.role}<td><span class="${e.status}">${e.status}</span>
-  <td>${staff() ? `<button class="g" onclick="empForm('${e.id}')">Edit</button> ${role === 'Admin' ? `<button class="g" onclick="delEmp('${e.id}')">Delete</button>` : ''}` : ''}`).join('')}</table></div>`;
-}
-function attendance() {
-  const A = staff() ? S.attendance : S.attendance.filter((a) => a.employeeId === me().id);
-  const L = staff() ? S.leaves : S.leaves.filter((l) => l.employeeId === me().id);
-  return `<h2>Attendance & Leave</h2><div class="card"><button class="b" onclick="punch()">Punch in now</button></div>
-  <div class="card scroll"><b>Attendance log</b><table><tr><th>Employee<th>Date<th>In<th>Out<th>Hours<th>Status</tr>
-  ${A.map((a) => `<tr><td>${esc(a.employeeName)}<td>${a.date}<td>${esc(a.checkIn)}<td>${esc(a.checkOut || '-')}<td>${a.workHours ?? '-'}
-  <td>${staff() ? `<select onchange="setAtt('${a.id}',this.value)">${['Present', 'Late', 'Half-Day', 'Absent', 'On Leave'].map((s) => `<option${s === a.status ? ' selected' : ''}>${s}`).join('')}</select>` : `<span class="${a.status}">${a.status}</span>`}`).join('')}</table></div>
-  <div class="card"><b>Apply for leave</b><form class="fg" onsubmit="applyLeave(event)" style="margin-top:10px">
-  <div><label>Type</label><select name="t"><option>Casual<option>Sick<option>Paid<option>Unpaid</select></div>
-  <div><label>From</label><input type="date" name="s" value="${today()}" required></div><div><label>To</label><input type="date" name="e" value="${today()}" required></div>
-  <div><label>Reason</label><input name="r" required></div><div style="align-self:end"><button class="b">Submit</button></div></form></div>
-  <div class="card scroll"><b>Leave requests</b><table><tr><th>Employee<th>Type<th>Dates<th>Days<th>Reason<th>Status<th></tr>
-  ${L.map((l) => `<tr><td>${esc(l.employeeName)}<td>${l.leaveType}<td>${l.startDate} to ${l.endDate}<td>${l.days}<td>${esc(l.reason)}<td><span class="${l.status}">${l.status}</span>
-  <td>${staff() && l.status === 'Pending' ? `<button class="b ok" onclick="review('${l.id}','Approved')">Approve</button> <button class="b bad" onclick="review('${l.id}','Rejected')">Reject</button>` : ''}`).join('')}</table></div>`;
-}
-function payroll() {
-  const P = staff() ? S.payroll : S.payroll.filter((p) => p.employeeId === me().id);
-  return `<h2>Payroll</h2>${staff() ? `<div class="row"><button class="b" onclick="runPayroll()">Run payroll for ${new Date().toLocaleString('en', { month: 'long', year: 'numeric' })}</button></div>` : ''}
-  <div class="card scroll"><table><tr><th>Employee<th>Month<th>Gross<th>Deductions<th>Net<th>Status<th></tr>
-  ${P.map((p) => `<tr><td>${esc(p.employeeName)}<td>${p.month}<td>${inr(p.grossSalary)}<td>${inr(p.totalDeductions)}<td><b>${inr(p.netSalary)}</b><td><span class="${p.status}">${p.status}</span><td><button class="g" onclick="payslip('${p.id}')">Payslip</button>`).join('')}</table></div>`;
-}
-function reports() {
-  const dep = group(S.employees, (e) => e.department);
-  const cnt = (a, f) => Object.fromEntries(Object.entries(group(a, f)).map(([k, v]) => [k, v.length]));
-  return `<h2>Reports</h2><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
-  <div class="card"><b>Gross payroll by department</b>${bars(Object.fromEntries(Object.entries(dep).map(([k, v]) => [k, sum(v, (e) => e.salary.basic + e.salary.hra + e.salary.allowances)])), inr)}</div>
-  <div class="card"><b>Attendance status</b>${bars(cnt(S.attendance, (a) => a.status))}</div>
-  <div class="card"><b>Leave requests</b>${bars(cnt(S.leaves, (l) => l.status))}</div>
-  <div class="card"><b>Employees by status</b>${bars(cnt(S.employees, (e) => e.status))}</div></div>
-  <button class="b" onclick="exportCSV()">Download employees CSV</button>`;
+function signOut() {
+  role = null;
+  sessionStorage.removeItem('role');
+  tab = 'dashboard';
+  toast('Signed out successfully', 'info');
+  render();
 }
 
-/* ---------- render ---------- */
-const views = { dashboard, employees, attendance, payroll, reports };
-function render(keepFocus) {
-  if (!role) { $('#app').innerHTML = login(); return; }
-  const f = keepFocus && document.activeElement?.tagName === 'INPUT';
-  $('#app').innerHTML = `<header><b>EMS</b><nav>${Object.keys(views).filter((t) => t !== 'reports' || staff()).map((t) => `<button class="${t === tab ? 'on' : ''}" onclick="tab='${t}';render()">${t[0].toUpperCase() + t.slice(1)}</button>`).join('')}</nav>
-  <span class="mode">${esc(name(me()))} (${role}) · ${live ? 'API' : 'demo'}</span><button class="g" style="color:#fff;border-color:#334155" onclick="signOut()">Sign out</button></header><main>${views[tab]()}</main>`;
-  if (f) { const i = $('main input'); i.focus(); i.setSelectionRange(99, 99); }
-}
-
-/* ---------- actions ---------- */
-function signIn(r) { role = r; sessionStorage.setItem('role', r); tab = 'dashboard'; render(); }
-function signOut() { role = null; sessionStorage.removeItem('role'); render(); }
-function punch() {
+/* Attendance Punch In & Out */
+async function punch() {
   const u = me(), d = today(), late = new Date().getHours() >= 10;
-  if (S.attendance.some((a) => a.employeeId === u.id && a.date === d)) return alert('Already punched in today.');
-  commit('attendance', 'add', { id: 'att-' + Date.now(), employeeId: u.id, employeeName: name(u), department: u.department, date: d, checkIn: now(), status: late ? 'Late' : 'Present', workHours: 0, notes: 'Web punch' });
+  if ((S.attendance || []).some((a) => a.employeeId === u.id && a.date === d)) {
+    toast('Already punched in today.', 'error');
+    return;
+  }
+  const item = {
+    id: 'att-' + Date.now(),
+    employeeId: u.id,
+    employeeName: name(u),
+    department: u.department,
+    date: d,
+    checkIn: now(),
+    checkOut: '-',
+    status: late ? 'Late' : 'Present',
+    workHours: 0,
+    notes: 'Self web punch'
+  };
+  const ok = await commit('attendance', 'add', item);
+  if (ok) toast(`Punched in at ${item.checkIn} (${item.status})`, 'success');
 }
-function setAtt(id, status) { commit('attendance', 'upd', { ...S.attendance.find((a) => a.id === id), status }); }
-function applyLeave(ev) {
-  ev.preventDefault(); const f = new FormData(ev.target), u = me();
-  const days = Math.max(1, Math.round((new Date(f.get('e')) - new Date(f.get('s'))) / 864e5) + 1);
-  commit('leaves', 'add', { id: 'leave-' + Date.now(), employeeId: u.id, employeeName: name(u), department: u.department, leaveType: f.get('t'), startDate: f.get('s'), endDate: f.get('e'), days, reason: f.get('r'), status: 'Pending', appliedOn: today() });
+
+async function punchOut() {
+  const u = me(), d = today();
+  const a = (S.attendance || []).find((x) => x.employeeId === u.id && x.date === d);
+  if (!a) {
+    toast('No active punch record found for today.', 'error');
+    return;
+  }
+  const t = now();
+  let hrs = 8.5;
+  try {
+    const parseTime = (s) => {
+      const [hm, ap] = s.split(' ');
+      let [h, m] = hm.split(':').map(Number);
+      if (ap === 'PM' && h < 12) h += 12;
+      if (ap === 'AM' && h === 12) h = 0;
+      return h * 60 + m;
+    };
+    hrs = Math.max(0.5, Math.round(((parseTime(t) - parseTime(a.checkIn)) / 60) * 10) / 10);
+  } catch {}
+  
+  const updated = { ...a, checkOut: t, workHours: hrs };
+  const ok = await commit('attendance', 'upd', updated);
+  if (ok) toast(`Punched out at ${t}. Shift duration: ${hrs} hours.`, 'success');
 }
+
+function setAtt(id, status) {
+  const item = (S.attendance || []).find((a) => a.id === id);
+  if (item) {
+    commit('attendance', 'upd', { ...item, status });
+    toast(`Attendance status updated to ${status}`, 'success');
+  }
+}
+
+/* Leave Application & Review */
+async function applyLeave(ev) {
+  ev.preventDefault();
+  const f = new FormData(ev.target), u = me();
+  const s = f.get('s'), e = f.get('e'), t = f.get('t'), r = f.get('r');
+
+  if (new Date(e) < new Date(s)) {
+    toast('End date must be on or after start date.', 'error');
+    return;
+  }
+
+  const days = Math.max(1, Math.round((new Date(e) - new Date(s)) / 864e5) + 1);
+  const key = { Casual: 'casual', Sick: 'sick', Paid: 'paid' }[t];
+  if (key && u.leaveBalance && u.leaveBalance[key] < days) {
+    toast(`Insufficient ${t} leave balance (${u.leaveBalance[key]} days remaining, ${days} requested).`, 'error');
+    return;
+  }
+
+  const item = {
+    id: 'leave-' + Date.now(),
+    employeeId: u.id,
+    employeeName: name(u),
+    department: u.department,
+    leaveType: t,
+    startDate: s,
+    endDate: e,
+    days,
+    reason: r,
+    status: 'Pending',
+    appliedOn: today()
+  };
+
+  const ok = await commit('leaves', 'add', item);
+  if (ok) toast(`Leave application submitted (${days} days)`, 'success');
+}
+
 async function review(id, status) {
-  const l = S.leaves.find((x) => x.id === id), u = me();
+  const l = (S.leaves || []).find((x) => x.id === id), u = me();
+  if (!l) return;
   await commit('leaves', 'upd', { ...l, status, reviewedBy: `${name(u)} (${role})`, reviewedAt: `${today()} ${now()}` });
-  const key = { Casual: 'casual', Sick: 'sick', Paid: 'paid' }[l.leaveType], emp = S.employees.find((e) => e.id === l.employeeId);
-  if (status === 'Approved' && key && emp) commit('employees', 'upd', { ...emp, leaveBalance: { ...emp.leaveBalance, [key]: Math.max(0, emp.leaveBalance[key] - l.days) } });
+  
+  const key = { Casual: 'casual', Sick: 'sick', Paid: 'paid' }[l.leaveType];
+  const emp = (S.employees || []).find((e) => e.id === l.employeeId);
+  if (status === 'Approved' && key && emp && emp.leaveBalance) {
+    await commit('employees', 'upd', {
+      ...emp,
+      leaveBalance: { ...emp.leaveBalance, [key]: Math.max(0, emp.leaveBalance[key] - l.days) }
+    });
+  }
+  toast(`Leave request for ${l.employeeName} marked as ${status}`, status === 'Approved' ? 'success' : 'info');
 }
+
+/* Employee Profile Drawer */
+function viewProfile(id) {
+  const e = (S.employees || []).find((x) => x.id === id);
+  if (!e) return;
+  const gross = (e.salary?.basic || 0) + (e.salary?.hra || 0) + (e.salary?.allowances || 0);
+  const tax = Math.round(gross * (e.salary?.taxRate || 10) / 100);
+  const pf = Math.round((e.salary?.basic || 0) * (e.salary?.pfRate || 12) / 100);
+  const net = gross - tax - pf;
+
+  $('#dlg').innerHTML = `
+  <div class="modal-header">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="user-avatar" style="width:42px;height:42px;font-size:16px;background:${e.role==='Admin'?'#dc2626':e.role==='HR'?'#4f46e5':'#059669'}">
+        ${(e.firstName?.[0]||'')+((e.lastName?.[0])||'')}
+      </div>
+      <div>
+        <h2 style="margin:0">${esc(name(e))}</h2>
+        <div style="font-size:12.5px;color:var(--mute)">${esc(e.designation)} · ${esc(e.department)} · <span class="tag ${e.status}">${e.status}</span></div>
+      </div>
+    </div>
+    <button class="g icon-btn" onclick="$('#dlg').close()">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+      <div class="card" style="margin:0">
+        <h4 style="margin:0 0 10px;font-size:13px;text-transform:uppercase;color:var(--mute)">Personal & Job Details</h4>
+        <div style="font-size:13px;line-height:1.8">
+          <div><b>Employee Code:</b> <span style="font-family:'JetBrains Mono',monospace">${esc(e.employeeCode)}</span></div>
+          <div><b>Email:</b> ${esc(e.email)}</div>
+          <div><b>Phone:</b> ${esc(e.phone || '—')}</div>
+          <div><b>System Role:</b> <span class="role-badge role-${e.role}">${e.role}</span></div>
+          <div><b>Joining Date:</b> ${e.joiningDate}</div>
+          <div><b>Address:</b> <small>${esc(e.address || '—')}</small></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin:0">
+        <h4 style="margin:0 0 10px;font-size:13px;text-transform:uppercase;color:var(--mute)">Compensation Structure</h4>
+        <div style="font-size:13px;line-height:1.8">
+          <div><b>Basic Salary:</b> ${inr(e.salary?.basic)}</div>
+          <div><b>HRA:</b> ${inr(e.salary?.hra)}</div>
+          <div><b>Allowances:</b> ${inr(e.salary?.allowances)}</div>
+          <div><b>Gross Monthly:</b> <b>${inr(gross)}</b></div>
+          <div style="color:var(--bad)"><b>Est. Tax (${e.salary?.taxRate || 10}%):</b> -${inr(tax)}</div>
+          <div style="color:var(--warn)"><b>Est. PF (${e.salary?.pfRate || 12}%):</b> -${inr(pf)}</div>
+          <div style="color:var(--ok)"><b>Est. Net Pay:</b> <b>${inr(net)}</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px">
+      <div class="card" style="margin:0">
+        <h4 style="margin:0 0 10px;font-size:13px;text-transform:uppercase;color:var(--mute)">Bank Account Details</h4>
+        <div style="font-size:13px;line-height:1.8">
+          <div><b>Bank:</b> ${esc(e.bankDetails?.bankName || 'HDFC Bank')}</div>
+          <div><b>Account:</b> ${esc(e.bankDetails?.accountNumber || '•••• •••• 9012')}</div>
+          <div><b>IFSC:</b> ${esc(e.bankDetails?.ifsc || 'HDFC0001234')}</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin:0">
+        <h4 style="margin:0 0 10px;font-size:13px;text-transform:uppercase;color:var(--mute)">Remaining Leave Quotas</h4>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <div style="flex:1;background:var(--bg);padding:10px;border-radius:8px;text-align:center">
+            <div style="font-size:18px;font-weight:800;color:var(--pri)">${e.leaveBalance?.casual || 0}</div>
+            <small style="color:var(--mute)">Casual</small>
+          </div>
+          <div style="flex:1;background:var(--bg);padding:10px;border-radius:8px;text-align:center">
+            <div style="font-size:18px;font-weight:800;color:var(--warn)">${e.leaveBalance?.sick || 0}</div>
+            <small style="color:var(--mute)">Sick</small>
+          </div>
+          <div style="flex:1;background:var(--bg);padding:10px;border-radius:8px;text-align:center">
+            <div style="font-size:18px;font-weight:800;color:var(--ok)">${e.leaveBalance?.paid || 0}</div>
+            <small style="color:var(--mute)">Paid</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="g" onclick="$('#dlg').close()">Close</button>
+    ${staff() ? `<button class="b" onclick="$('#dlg').close();empForm('${e.id}')">Edit Employee</button>` : ''}
+  </div>`;
+  $('#dlg').showModal();
+}
+
+/* Add / Edit Employee Form */
 function empForm(id) {
-  const e = S.employees.find((x) => x.id === id) || { salary: { basic: 30000, hra: 10000, allowances: 5000, taxRate: 10, pfRate: 12 }, role: 'Employee', status: 'Active', joiningDate: today() };
-  const i = (k, l, v, t = 'text') => `<div><label>${l}</label><input name="${k}" type="${t}" value="${esc(v)}" required></div>`;
-  const s = (k, l, v, o) => `<div><label>${l}</label><select name="${k}">${o.map((x) => `<option${x === v ? ' selected' : ''}>${x}`).join('')}</select></div>`;
-  $('#dlg').innerHTML = `<h2>${id ? 'Edit' : 'Add'} employee</h2><form class="fg" onsubmit="saveEmp(event,'${id || ''}')">
-  ${i('firstName', 'First name', e.firstName || '')}${i('lastName', 'Last name', e.lastName || '')}${i('email', 'Email', e.email || '', 'email')}${i('phone', 'Phone', e.phone || '')}
-  ${i('department', 'Department', e.department || '')}${i('designation', 'Designation', e.designation || '')}${i('joiningDate', 'Joining date', e.joiningDate, 'date')}
-  ${s('role', 'Role', e.role, ['Employee', 'HR', 'Admin'])}${s('status', 'Status', e.status, ['Active', 'On Leave', 'Inactive'])}
-  ${i('basic', 'Basic salary', e.salary.basic, 'number')}${i('hra', 'HRA', e.salary.hra, 'number')}${i('allowances', 'Allowances', e.salary.allowances, 'number')}
-  <div style="grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end"><button type="button" class="g" onclick="$('#dlg').close()">Cancel</button><button class="b">Save</button></div></form>`;
+  const e = (S.employees || []).find((x) => x.id === id) || {
+    salary: { basic: 35000, hra: 14000, allowances: 6000, taxRate: 10, pfRate: 12 },
+    role: 'Employee',
+    status: 'Active',
+    joiningDate: today(),
+    leaveBalance: { casual: 8, sick: 8, paid: 12 },
+    bankDetails: { accountNumber: '•••• •••• 1234', bankName: 'HDFC Bank', ifsc: 'HDFC0001234' }
+  };
+
+  const nextCode = e.employeeCode || `EMS-${101 + (S.employees || []).length}`;
+
+  $('#dlg').innerHTML = `
+  <div class="modal-header">
+    <h2 style="margin:0">${id ? 'Edit Employee Record' : 'Add New Employee'}</h2>
+    <button class="g icon-btn" onclick="$('#dlg').close()">✕</button>
+  </div>
+  <form onsubmit="saveEmp(event,'${id || ''}')">
+    <div class="modal-body">
+      <div style="font-size:12px;font-weight:700;color:var(--mute);text-transform:uppercase;margin-bottom:10px">1. Personnel Information</div>
+      <div class="fg" style="margin-bottom:18px">
+        <div class="input-group"><label>First Name</label><input name="firstName" value="${esc(e.firstName || '')}" required></div>
+        <div class="input-group"><label>Last Name</label><input name="lastName" value="${esc(e.lastName || '')}" required></div>
+        <div class="input-group"><label>Employee Code</label><input name="employeeCode" value="${esc(nextCode)}" required></div>
+        <div class="input-group"><label>Email Address</label><input type="email" name="email" value="${esc(e.email || '')}" required></div>
+        <div class="input-group"><label>Phone Number</label><input name="phone" value="${esc(e.phone || '')}" placeholder="+91 98765 43210"></div>
+        <div class="input-group"><label>Joining Date</label><input type="date" name="joiningDate" value="${e.joiningDate || today()}" required></div>
+      </div>
+
+      <div style="font-size:12px;font-weight:700;color:var(--mute);text-transform:uppercase;margin-bottom:10px">2. Organization & Role</div>
+      <div class="fg" style="margin-bottom:18px">
+        <div class="input-group"><label>Department</label>
+          <select name="department">
+            ${['Engineering', 'Human Resources', 'Data Science', 'UI/UX Design', 'Operations'].map((d) => `<option${d === e.department ? ' selected' : ''}>${d}</option>`).join('')}
+          </select>
+        </div>
+        <div class="input-group"><label>Designation</label><input name="designation" value="${esc(e.designation || '')}" placeholder="e.g. Lead Engineer" required></div>
+        <div class="input-group"><label>System Role</label>
+          <select name="role">
+            ${['Employee', 'HR', 'Admin'].map((r) => `<option${r === e.role ? ' selected' : ''}>${r}</option>`).join('')}
+          </select>
+        </div>
+        <div class="input-group"><label>Employment Status</label>
+          <select name="status">
+            ${['Active', 'On Leave', 'Inactive'].map((s) => `<option${s === e.status ? ' selected' : ''}>${s}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+
+      <div style="font-size:12px;font-weight:700;color:var(--mute);text-transform:uppercase;margin-bottom:10px">3. Monthly Compensation (INR)</div>
+      <div class="fg">
+        <div class="input-group"><label>Basic Salary (₹)</label><input type="number" name="basic" value="${e.salary?.basic || 35000}" min="0" required></div>
+        <div class="input-group"><label>HRA (₹)</label><input type="number" name="hra" value="${e.salary?.hra || 14000}" min="0" required></div>
+        <div class="input-group"><label>Special Allowances (₹)</label><input type="number" name="allowances" value="${e.salary?.allowances || 6000}" min="0" required></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="g" onclick="$('#dlg').close()">Cancel</button>
+      <button class="b">Save Employee Record</button>
+    </div>
+  </form>`;
   $('#dlg').showModal();
 }
-function saveEmp(ev, id) {
-  ev.preventDefault(); const f = Object.fromEntries(new FormData(ev.target)), old = S.employees.find((x) => x.id === id);
-  const e = { leaveBalance: { casual: 8, sick: 8, paid: 12 }, bankDetails: { accountNumber: '', bankName: '', ifsc: '' }, ...old,
-    id: id || 'emp-' + Date.now(), employeeCode: old?.employeeCode || 'EMS-' + (101 + S.employees.length),
-    ...Object.fromEntries(['firstName', 'lastName', 'email', 'phone', 'department', 'designation', 'joiningDate', 'role', 'status'].map((k) => [k, f[k]])),
-    salary: { taxRate: 10, pfRate: 12, ...old?.salary, basic: +f.basic, hra: +f.hra, allowances: +f.allowances } };
-  $('#dlg').close(); commit('employees', id ? 'upd' : 'add', e);
+
+async function saveEmp(ev, id) {
+  ev.preventDefault();
+  const f = Object.fromEntries(new FormData(ev.target));
+  const old = (S.employees || []).find((x) => x.id === id);
+
+  // Validate duplicate employee code
+  const codeExists = (S.employees || []).some((e) => e.id !== id && e.employeeCode.toLowerCase() === f.employeeCode.trim().toLowerCase());
+  if (codeExists) {
+    toast(`Employee code ${f.employeeCode} already exists.`, 'error');
+    return;
+  }
+
+  // Validate duplicate email
+  const emailExists = (S.employees || []).some((e) => e.id !== id && e.email.toLowerCase() === f.email.trim().toLowerCase());
+  if (emailExists) {
+    toast(`Email ${f.email} is already in use.`, 'error');
+    return;
+  }
+
+  const record = {
+    leaveBalance: { casual: 8, sick: 8, paid: 12 },
+    bankDetails: { accountNumber: '•••• •••• 9012', bankName: 'HDFC Bank', ifsc: 'HDFC0001234' },
+    ...old,
+    id: id || 'emp-' + Date.now(),
+    employeeCode: f.employeeCode.trim(),
+    firstName: f.firstName.trim(),
+    lastName: f.lastName.trim(),
+    email: f.email.trim(),
+    phone: f.phone?.trim() || '',
+    department: f.department,
+    designation: f.designation.trim(),
+    joiningDate: f.joiningDate,
+    role: f.role,
+    status: f.status,
+    salary: {
+      taxRate: 10,
+      pfRate: 12,
+      ...old?.salary,
+      basic: Number(f.basic) || 0,
+      hra: Number(f.hra) || 0,
+      allowances: Number(f.allowances) || 0
+    }
+  };
+
+  $('#dlg').close();
+  const ok = await commit('employees', id ? 'upd' : 'add', record);
+  if (ok) toast(`Employee ${record.firstName} ${record.lastName} saved successfully`, 'success');
 }
-function delEmp(id) { if (confirm('Delete this employee and all related records?')) commit('employees', 'del', id); }
-function runPayroll() {
+
+function delEmp(id) {
+  const e = (S.employees || []).find((x) => x.id === id);
+  if (!e) return;
+
+  $('#dlg').innerHTML = `
+  <div class="modal-header">
+    <h2 style="margin:0;color:var(--bad)">Confirm Employee Deletion</h2>
+    <button class="g icon-btn" onclick="$('#dlg').close()">✕</button>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to permanently delete <b>${esc(name(e))}</b> (${esc(e.employeeCode)})?</p>
+    <div style="background:var(--bad-light);border:1px solid var(--bad-border);color:var(--bad);padding:12px;border-radius:8px;font-size:13px">
+      ⚠️ <b>Cascading Integrity:</b> This action will permanently remove this employee along with all their linked attendance punches, leave records, and payroll receipts.
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="g" onclick="$('#dlg').close()">Cancel</button>
+    <button class="b danger" onclick="$('#dlg').close();confirmDelete('${id}')">Yes, Delete Employee</button>
+  </div>`;
+  $('#dlg').showModal();
+}
+
+async function confirmDelete(id) {
+  const ok = await commit('employees', 'del', id);
+  if (ok) toast('Employee and all related records deleted.', 'info');
+}
+
+/* Automated Payroll Engine */
+async function runPayroll() {
   const month = new Date().toLocaleString('en', { month: 'long', year: 'numeric' });
-  const batch = S.employees.filter((e) => e.status !== 'Inactive').map((e) => {
-    const { basic, hra, allowances, taxRate, pfRate } = e.salary, gross = basic + hra + allowances, leave = e.status === 'On Leave';
-    const tax = Math.round(gross * taxRate / 100), pf = Math.round(basic * pfRate / 100), pen = leave ? 2100 : 0;
-    return { id: `pay-${e.id}-${month.replace(' ', '')}`, employeeId: e.id, employeeName: name(e), department: e.department, designation: e.designation, month, payDate: today(),
-      basicSalary: basic, hra, specialAllowance: allowances, grossSalary: gross, taxDeduction: tax, pfDeduction: pf, attendancePenalty: pen, totalDeductions: tax + pf + pen,
-      netSalary: gross - tax - pf - pen, status: 'Paid', workingDays: 22, presentDays: leave ? 20 : 22, paidLeaveDays: leave ? 2 : 0 };
+  const activeEmps = (S.employees || []).filter((e) => e.status !== 'Inactive');
+
+  const batch = activeEmps.map((e) => {
+    const { basic, hra, allowances, taxRate, pfRate } = e.salary || { basic: 30000, hra: 12000, allowances: 5000, taxRate: 10, pfRate: 12 };
+    const gross = basic + hra + allowances;
+    const leave = e.status === 'On Leave';
+    const tax = Math.round(gross * (taxRate || 10) / 100);
+    const pf = Math.round(basic * (pfRate || 12) / 100);
+    const penalty = leave ? 2100 : 0;
+    const totalDeductions = tax + pf + penalty;
+    const netSalary = gross - totalDeductions;
+
+    return {
+      id: `pay-${e.id}-${month.replace(' ', '')}`,
+      employeeId: e.id,
+      employeeName: name(e),
+      department: e.department,
+      designation: e.designation,
+      month,
+      payDate: today(),
+      basicSalary: basic,
+      hra,
+      specialAllowance: allowances,
+      grossSalary: gross,
+      taxDeduction: tax,
+      pfDeduction: pf,
+      attendancePenalty: penalty,
+      totalDeductions,
+      netSalary,
+      status: 'Paid',
+      workingDays: 22,
+      presentDays: leave ? 20 : 22,
+      paidLeaveDays: leave ? 2 : 0
+    };
   });
-  commit('payroll', 'all', [...batch, ...S.payroll.filter((p) => p.month !== month)]);
+
+  const updatedPayroll = [...batch, ...(S.payroll || []).filter((p) => p.month !== month)];
+  const ok = await commit('payroll', 'all', updatedPayroll);
+  if (ok) toast(`Payroll processed for ${month} (${batch.length} employees)`, 'success');
 }
+
+/* Payslip View Modal */
 function payslip(id) {
-  const p = S.payroll.find((x) => x.id === id), r = (a, b) => `<tr><td>${a}<td style="text-align:right">${inr(b)}`;
-  $('#dlg').innerHTML = `<h2>Payslip · ${p.month}</h2><p><b>${esc(p.employeeName)}</b><br>${esc(p.designation)}, ${esc(p.department)}<br>Pay date ${p.payDate} · Present ${p.presentDays}/${p.workingDays} days</p>
-  <table>${r('Basic', p.basicSalary)}${r('HRA', p.hra)}${r('Allowances', p.specialAllowance)}${r('<b>Gross</b>', p.grossSalary)}${r('Tax', -p.taxDeduction)}${r('Provident fund', -p.pfDeduction)}${r('Attendance penalty', -p.attendancePenalty)}${r('<b>Net pay</b>', p.netSalary)}</table>
-  <div class="noprint" style="margin-top:14px;text-align:right"><button class="g" onclick="$('#dlg').close()">Close</button> <button class="b" onclick="print()">Print</button></div>`;
+  const p = (S.payroll || []).find((x) => x.id === id);
+  if (!p) return;
+  const emp = (S.employees || []).find((e) => e.id === p.employeeId);
+  const r = (label, val, color) => `
+    <tr>
+      <td style="padding:8px 0;color:var(--ink-secondary)">${label}</td>
+      <td style="padding:8px 0;text-align:right;font-weight:600;color:${color || 'var(--ink)'}">${inr(val)}</td>
+    </tr>`;
+
+  $('#dlg').innerHTML = `
+  <div class="modal-header">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="brand-icon" style="width:32px;height:32px;font-size:14px">E</div>
+      <div>
+        <h2 style="margin:0;font-size:17px">Monthly Payslip Receipt</h2>
+        <div style="font-size:12px;color:var(--mute)">Pay Cycle: <b>${esc(p.month)}</b> · Status: <span class="tag Paid">PAID</span></div>
+      </div>
+    </div>
+    <button class="g icon-btn noprint" onclick="$('#dlg').close()">✕</button>
+  </div>
+  <div class="modal-body" style="padding:24px">
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;background:var(--bg);border-radius:10px;padding:16px;margin-bottom:20px;border:1px solid var(--line)">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--mute);text-transform:uppercase">Employee Details</div>
+        <b style="font-size:15px;color:var(--ink)">${esc(p.employeeName)}</b>
+        <div style="font-size:12.5px;color:var(--ink-secondary)">${esc(p.designation)} · ${esc(p.department)}</div>
+        <div style="font-size:12px;color:var(--mute)">Code: ${esc(emp?.employeeCode || '—')}</div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--mute);text-transform:uppercase">Payment Information</div>
+        <div>Pay Date: <b>${p.payDate}</b></div>
+        <div>Working Days: <b>${p.workingDays} days</b></div>
+        <div>Present / Paid: <b>${p.presentDays + (p.paidLeaveDays || 0)} days</b></div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:24px">
+      <div>
+        <div style="font-weight:700;font-size:13px;border-bottom:2px solid var(--pri);padding-bottom:6px;margin-bottom:8px;color:var(--pri)">
+          Earnings & Allowances
+        </div>
+        <table style="font-size:13px">
+          ${r('Basic Salary', p.basicSalary)}
+          ${r('House Rent Allowance (HRA)', p.hra)}
+          ${r('Special Allowances', p.specialAllowance)}
+          <tr style="border-top:1px solid var(--line)">
+            <td style="padding:10px 0;font-weight:700">Gross Earnings</td>
+            <td style="padding:10px 0;text-align:right;font-weight:800;color:var(--ink)">${inr(p.grossSalary)}</td>
+          </tr>
+        </table>
+      </div>
+
+      <div>
+        <div style="font-weight:700;font-size:13px;border-bottom:2px solid var(--bad);padding-bottom:6px;margin-bottom:8px;color:var(--bad)">
+          Deductions & Statutory
+        </div>
+        <table style="font-size:13px">
+          ${r('Income Tax Deduction', p.taxDeduction, 'var(--bad)')}
+          ${r('Provident Fund (PF)', p.pfDeduction, 'var(--warn)')}
+          ${r('Attendance Penalty', p.attendancePenalty || 0, 'var(--bad)')}
+          <tr style="border-top:1px solid var(--line)">
+            <td style="padding:10px 0;font-weight:700">Total Deductions</td>
+            <td style="padding:10px 0;text-align:right;font-weight:800;color:var(--bad)">-${inr(p.totalDeductions)}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;padding:16px;background:var(--ok-light);border:1px solid var(--ok-border);border-radius:12px;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--ok);text-transform:uppercase">Net Disbursed Take-Home Pay</div>
+        <div style="font-size:12px;color:var(--mute)">Deposited to ${esc(emp?.bankDetails?.bankName || 'HDFC Bank')} (${esc(emp?.bankDetails?.accountNumber || '•••• 9012')})</div>
+      </div>
+      <div style="font-size:26px;font-weight:800;color:var(--ok)">
+        ${inr(p.netSalary)}
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer noprint">
+    <button class="g" onclick="$('#dlg').close()">Close</button>
+    <button class="b" onclick="window.print()">🖨️ Print Payslip Receipt</button>
+  </div>`;
   $('#dlg').showModal();
 }
+
+/* CSV Data Exports */
 function exportCSV() {
-  const rows = [['Code', 'Name', 'Email', 'Department', 'Designation', 'Role', 'Status', 'Basic'], ...S.employees.map((e) => [e.employeeCode, name(e), e.email, e.department, e.designation, e.role, e.status, e.salary.basic])];
-  const a = Object.assign(document.createElement('a'), { download: 'employees.csv', href: URL.createObjectURL(new Blob([rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n')], { type: 'text/csv' })) });
+  const rows = [
+    ['Employee Code', 'First Name', 'Last Name', 'Email', 'Phone', 'Department', 'Designation', 'Role', 'Status', 'Basic Salary'],
+    ...(S.employees || []).map((e) => [
+      e.employeeCode, e.firstName, e.lastName, e.email, e.phone || '', e.department, e.designation, e.role, e.status, e.salary?.basic || 0
+    ])
+  ];
+  downloadCSV(rows, `employees_master_${today()}.csv`);
+  toast('Employees CSV downloaded', 'success');
+}
+
+function exportAttendanceCSV() {
+  const rows = [
+    ['Employee Code', 'Employee Name', 'Department', 'Date', 'Check-In', 'Check-Out', 'Work Hours', 'Status', 'Notes'],
+    ...(S.attendance || []).map((a) => {
+      const emp = (S.employees || []).find((e) => e.id === a.employeeId);
+      return [emp?.employeeCode || '—', a.employeeName, a.department, a.date, a.checkIn, a.checkOut || '—', a.workHours || 0, a.status, a.notes || '—'];
+    })
+  ];
+  downloadCSV(rows, `attendance_logs_${today()}.csv`);
+  toast('Attendance CSV downloaded', 'success');
+}
+
+function exportPayrollCSV() {
+  const rows = [
+    ['Employee Name', 'Department', 'Designation', 'Month', 'Pay Date', 'Basic', 'HRA', 'Allowances', 'Gross', 'Tax', 'PF', 'Penalty', 'Net Pay', 'Status'],
+    ...(S.payroll || []).map((p) => [
+      p.employeeName, p.department, p.designation, p.month, p.payDate, p.basicSalary, p.hra, p.specialAllowance, p.grossSalary, p.taxDeduction, p.pfDeduction, p.attendancePenalty, p.netSalary, p.status
+    ])
+  ];
+  downloadCSV(rows, `payroll_records_${today()}.csv`);
+  toast('Payroll CSV downloaded', 'success');
+}
+
+function downloadCSV(rows, filename) {
+  const csvContent = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const a = Object.assign(document.createElement('a'), { download: filename, href: URL.createObjectURL(blob) });
   a.click();
 }
+
 boot();
 </script>
 </body>

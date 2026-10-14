@@ -47,25 +47,64 @@ app.param('col', (req, res, next, col) =>
 app.get('/api/:col', (req, res) => res.json(load()[req.params.col]));
 
 app.post('/api/:col', (req, res) => {
-  const d = load(), item = req.body;
+  const d = load(), item = req.body, col = req.params.col;
   if (!item?.id) return res.status(400).json({ error: 'id required' });
-  d[req.params.col].unshift(item);
+
+  if (col === 'employees') {
+    const role = req.headers['x-user-role'];
+    if (role && !['Admin', 'HR'].includes(role)) {
+      return res.status(403).json({ error: 'Forbidden: Only Admin and HR can add employees' });
+    }
+    if (d.employees.some((e) => e.employeeCode && e.employeeCode.toLowerCase() === (item.employeeCode || '').toLowerCase())) {
+      return res.status(400).json({ error: `Employee Code ${item.employeeCode} already exists` });
+    }
+    if (d.employees.some((e) => e.email && e.email.toLowerCase() === (item.email || '').toLowerCase())) {
+      return res.status(400).json({ error: `Email ${item.email} is already registered` });
+    }
+  }
+
+  d[col].unshift(item);
   save(d);
   res.status(201).json(item);
 });
 
 app.put('/api/:col', (req, res) => {
+  const col = req.params.col;
+  if (col === 'payroll') {
+    const role = req.headers['x-user-role'];
+    if (role && !['Admin', 'HR'].includes(role)) {
+      return res.status(403).json({ error: 'Forbidden: Only Admin and HR can execute payroll runs' });
+    }
+  }
   if (!Array.isArray(req.body)) return res.status(400).json({ error: 'array required' });
   const d = load();
-  d[req.params.col] = req.body;
+  d[col] = req.body;
   save(d);
   res.json({ ok: true, count: req.body.length });
 });
 
 app.put('/api/:col/:id', (req, res) => {
-  const d = load(), list = d[req.params.col];
+  const d = load(), col = req.params.col, list = d[col];
   const i = list.findIndex((x) => x.id === req.params.id);
   if (i < 0) return res.status(404).json({ error: 'Not found' });
+
+  if (col === 'employees') {
+    const role = req.headers['x-user-role'];
+    if (role && !['Admin', 'HR'].includes(role)) {
+      return res.status(403).json({ error: 'Forbidden: Only Admin and HR can edit employee records' });
+    }
+    if (req.body.employeeCode && d.employees.some((e) => e.id !== req.params.id && e.employeeCode?.toLowerCase() === req.body.employeeCode.toLowerCase())) {
+      return res.status(400).json({ error: `Employee Code ${req.body.employeeCode} already in use` });
+    }
+  }
+
+  if (col === 'leaves' && req.body.status && ['Approved', 'Rejected'].includes(req.body.status)) {
+    const role = req.headers['x-user-role'];
+    if (role && !['Admin', 'HR'].includes(role)) {
+      return res.status(403).json({ error: 'Forbidden: Only Admin and HR can review leaves' });
+    }
+  }
+
   list[i] = { ...list[i], ...req.body, id: list[i].id };
   save(d);
   res.json(list[i]);
@@ -73,6 +112,13 @@ app.put('/api/:col/:id', (req, res) => {
 
 app.delete('/api/:col/:id', (req, res) => {
   const d = load(), { col, id } = req.params;
+  if (col === 'employees') {
+    const role = req.headers['x-user-role'];
+    if (role && role !== 'Admin') {
+      return res.status(403).json({ error: 'Forbidden: Only Admin can delete employees' });
+    }
+  }
+
   d[col] = d[col].filter((x) => x.id !== id);
   if (col === 'employees')
     for (const c of ['attendance', 'leaves', 'payroll']) d[c] = d[c].filter((x) => x.employeeId !== id);

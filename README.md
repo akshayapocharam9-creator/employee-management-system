@@ -3,7 +3,8 @@
 **Course:** Web Technology (B.Tech Data Science)  
 **Project Category:** Semester Academic Web Application Submission  
 **Student Name:** Laxmi Pocharam  
-**Repository:** [https://github.com/akshayapocharam9-creator/employee-management-system](https://github.com/akshayapocharam9-creator/employee-management-system)  
+**Live Website:** [https://akshayapocharam9-creator.github.io/employee-management-system/](https://akshayapocharam9-creator.github.io/employee-management-system/)  
+**GitHub Repository:** [https://github.com/akshayapocharam9-creator/employee-management-system](https://github.com/akshayapocharam9-creator/employee-management-system)  
 **Presentation Slides (.PPTX):** Preserved in repo root as [`Employee_Management_System.pptx`](./Employee_Management_System.pptx) and accessible interactively via the **Presentation** tab in the web application.
 
 ---
