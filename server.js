@@ -9,31 +9,9 @@ const DB = path.join(dir, 'db.json');
 const COLS = ['employees', 'attendance', 'leaves', 'payroll'];
 const PORT = process.env.PORT || 3000;
 
-const getSeedData = () => {
-  const seedPath = path.join(dir, 'data.json');
-  return JSON.parse(fs.readFileSync(seedPath, 'utf8'));
-};
-
-const load = () => {
-  try {
-    if (!fs.existsSync(DB)) {
-      const seed = getSeedData();
-      fs.writeFileSync(DB, JSON.stringify(seed, null, 2));
-      return seed;
-    }
-    return JSON.parse(fs.readFileSync(DB, 'utf8'));
-  } catch (err) {
-    return getSeedData();
-  }
-};
-
-const save = (d) => {
-  try {
-    fs.writeFileSync(DB, JSON.stringify(d, null, 2));
-  } catch (err) {
-    console.error('Error saving db.json:', err);
-  }
-};
+if (!fs.existsSync(DB)) fs.copyFileSync(path.join(dir, 'data.json'), DB); // first run: seed
+const load = () => JSON.parse(fs.readFileSync(DB, 'utf8'));
+const save = (d) => fs.writeFileSync(DB, JSON.stringify(d, null, 2));
 
 const app = express();
 app.use(express.json());

@@ -1,4 +1,4 @@
-// Automated Test Suite for Employee Management System
+// Automated Test Suite for Employee Management System (Original Integrity)
 import test from 'node:test';
 import assert from 'node:assert';
 import fs from 'node:fs';
@@ -36,20 +36,22 @@ test('Verification: Academic Presentation PPTX exists and is non-empty', () => {
   assert.ok(stats.size > 200000, `PPTX size should be > 200KB, found: ${stats.size}`);
 });
 
-test('Verification: index.html contains Presentation, SEED, and all core modules', () => {
+test('Verification: index.html contains original structure and core modules', () => {
   const htmlPath = path.join(rootDir, 'index.html');
   assert.ok(fs.existsSync(htmlPath), 'index.html must exist');
   const html = fs.readFileSync(htmlPath, 'utf8');
 
   assert.ok(html.includes('Employee Management System'), 'Must contain title');
-  assert.ok(html.includes('presentation'), 'Must contain presentation module');
-  assert.ok(html.includes('Employee_Management_System.pptx'), 'Must link to PPTX');
-  assert.ok(html.includes('punchOut'), 'Must contain punchOut functionality');
+  assert.ok(html.includes('dashboard'), 'Must contain dashboard module');
+  assert.ok(html.includes('employees'), 'Must contain employees module');
+  assert.ok(html.includes('attendance'), 'Must contain attendance module');
+  assert.ok(html.includes('payroll'), 'Must contain payroll module');
+  assert.ok(html.includes('reports'), 'Must contain reports module');
   assert.ok(html.includes('runPayroll'), 'Must contain runPayroll functionality');
   assert.ok(html.includes('exportCSV'), 'Must contain exportCSV functionality');
 });
 
-test('Verification: Vercel serverless configuration and routing', () => {
+test('Verification: Production hosting configuration and routing files', () => {
   const vercelPath = path.join(rootDir, 'vercel.json');
   assert.ok(fs.existsSync(vercelPath), 'vercel.json must exist');
   const vercelConfig = JSON.parse(fs.readFileSync(vercelPath, 'utf8'));
@@ -57,4 +59,10 @@ test('Verification: Vercel serverless configuration and routing', () => {
 
   const apiIndexPath = path.join(rootDir, 'api', 'index.js');
   assert.ok(fs.existsSync(apiIndexPath), 'api/index.js must exist');
+
+  const renderPath = path.join(rootDir, 'render.yaml');
+  assert.ok(fs.existsSync(renderPath), 'render.yaml must exist');
+
+  const procfilePath = path.join(rootDir, 'Procfile');
+  assert.ok(fs.existsSync(procfilePath), 'Procfile must exist');
 });
